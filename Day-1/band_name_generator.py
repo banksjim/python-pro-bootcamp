@@ -1,5 +1,5 @@
 #1. Create a greeting for your program.
-print("Let's create a band name!") 
+print("Let's create a band name!")
 
 #2. Ask the user for the city that they grew up in.
 user_city = input("What city did you grow up in?\n")
