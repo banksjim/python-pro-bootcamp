@@ -3,7 +3,7 @@ weight_kg = float(input("What is your weight in kg? "))
 
 bmi_metric = weight_kg / height_m ** 2
 
-if bmi_metric <= 18.5:
+if bmi_metric < 18.5:
     print(f"Your BMI is {bmi_metric}, you are underweight.")
 elif bmi_metric < 25:
     print(f"Your BMI is {bmi_metric}, you have a normal weight.")
