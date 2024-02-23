@@ -16,6 +16,10 @@ if height >= 120:
     elif age <= 18:
         admission_fee = 7.00
         ticket_type = "Youth"
+    elif age >= 45 and age <= 55:
+        admission_fee = 0.00
+        ticket_type = "Midlife Crises Adult"
+        print("You deserve a break. Have a free ride on us!")
     else:
         admission_fee = 12.00
         ticket_type = "Adult"
