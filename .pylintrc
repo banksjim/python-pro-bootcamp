@@ -1,4 +1,4 @@
 [MASTER]
 disable=
     C0114, # missing-module-docstring
-    CO103, # constants declaration doesn't conform to UPPERCASE naming convention
+    C0103  # constants declaration doesn't conform to UPPERCASE naming convention
