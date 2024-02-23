@@ -7,4 +7,4 @@ for counter in range(1, 10):
     print(random_integer)
 
 # Module practice
-print(my_module.pi)
+print(f"\n{my_module.pi}")
