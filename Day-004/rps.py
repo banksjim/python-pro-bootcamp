@@ -64,9 +64,8 @@ def main():
             os.system("clear")
 
         # Determine choices
-        player_choice = int(input("Choose 0, 1, or 2 -> Rock (0), Paper (1), or Scissors (2): " ))
-
-        computer_choice = int(random.randint(0, 2))
+        player_choice   = int(input("Choose 0, 1, or 2 -> Rock (0), Paper (1), or Scissors (2): " ))
+        computer_choice = random.randint(0, 2)
 
         # Show choices using ASCII art
         print(f"{rps_list[player_choice]}")
