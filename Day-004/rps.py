@@ -8,14 +8,25 @@ def get_terminal_type():
         return "Windows"
     return None
 
+def find_index(input_list, target_value):
+    if target_value in input_list:
+        return input_list.index(target_value)
+    else:
+        print("**Invalid selection**")
+        return 999
+
 def main():
     # Declare variables & lists
-    computer_choice: int = 0
-    player_choice:   int = 0
-    rules_index:     int = 0
+    check_selection:  int = 999 # 999 Used to signal invalid selection
+    computer_choice:  int = 0
+    player_choice:    int = 0
+    rules_index:      int = 0
 
-    choices_lookup:  str = ""
-    play_again:      str = "Y"
+    selection_valid:  bool = False
+
+    choices_lookup:   str = ""
+    play_again:       str = "Y"
+    player_selection: str = ""
 
     rock: str = """
         _______
@@ -53,6 +64,8 @@ def main():
         "20","L","21","W","22","D"
     ]
 
+    valid_player_selections = ["0", "1", "2"]
+
     # Main() logic
     while play_again.upper() == "Y":
 
@@ -64,7 +77,18 @@ def main():
             os.system("clear")
 
         # Determine choices
-        player_choice   = int(input("Choose 0, 1, or 2 -> Rock (0), Paper (1), or Scissors (2): " ))
+        selection_valid = False
+        
+        while selection_valid is False:
+            player_selection = input("Choose 0, 1, or 2 -> Rock (0), Paper (1), or Scissors (2): " )
+
+            check_selection = find_index(valid_player_selections, player_selection)
+            if check_selection != 999:
+                selection_valid = True
+            else:
+                selection_valid = False
+
+        player_choice = int(player_selection)
         computer_choice = random.randint(0, 2)
 
         # Show choices using ASCII art
@@ -73,7 +97,7 @@ def main():
         print(f"{rps_list[computer_choice]}")
 
         # Determine and declare winner
-        choices_lookup = str(player_choice) + str(computer_choice)
+        choices_lookup = player_selection + str(computer_choice)
         rules_index = rps_rules.index(choices_lookup)
 
         if rps_rules[rules_index + 1] == "W":
