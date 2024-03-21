@@ -36,5 +36,7 @@ def main():
     else:
         print('Please enter a number less than or equal to 1000')
 
+    return None
+
 if __name__ == '__main__':
     main()
