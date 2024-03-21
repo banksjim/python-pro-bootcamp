@@ -23,13 +23,13 @@ def main():
     else:
         os.system('clear')
 
-    # Modifed exercise-provided code
+    # Modified exercise-provided code
     student_heights = input().split()
 
     for n in range(0, len(student_heights)):
         student_heights[n] = int(student_heights[n])
 
-    # Excercise-submitted code
+    # Exercise-submitted code
     for student_height in student_heights:
         total_height += student_height
         student_count += 1
