@@ -19,9 +19,7 @@ def main():
         os.system('clear')
 
     # declare variables
-    index:                int = 0
     num_letters:          int = 0
-
     user_password:        str = ""
 
     # declare static lists
