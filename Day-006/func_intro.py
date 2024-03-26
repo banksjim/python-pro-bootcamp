@@ -24,7 +24,7 @@ def main():
         print(f"{an_integer}")
 
     # invoke my custom function
-    my_function(15)    
+    my_function(15)
 
     return None
 
