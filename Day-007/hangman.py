@@ -1,24 +1,17 @@
-import os
-import sys
-
-# determine terminal type
-def get_terminal_type():
-    if sys.platform.startswith('win'):
-        return 'Windows'
-    return None
+from shared_modules.system_modules import clear_terminal
 
 # main() program logic module
 def main():
 
-    # clear the terminal in either windows or mac/linux
-    terminal_type = get_terminal_type()
-    if terminal_type == 'Windows':
-        os.system('cls')
-    else:
-        os.system('clear')
+    # clear the terminal screen
+    clear_terminal()
 
     # initialize variables
-    banner: str = r'''
+    end_game: bool = False
+    guess:    str = ""
+
+    # ASCII art variables
+    banner:   str = r'''
     .__                                                 
     |  |__ _____    ____    ____   _____ _____    ____  
     |  |  \\__  \  /    \  / ___\ /     \\__  \  /    \ 
@@ -26,9 +19,32 @@ def main():
     |___|  (____  /___|  /\___  /|__|_|  (____  /___|  /
          \/     \/     \//_____/       \/     \/     \/ 
     '''
+
+    # initialize lists
+    empty_gallows = [
+        '   +---+',
+        '   |   |',
+        '       |',
+        '       |',
+        '       |',
+        '       |',
+        '=========='
+    ]
     
-    # mainline routine
+    hanged_man = [
+        '   O   |',
+        '   |   |',
+        '  /|   |',
+        '  /|\  |',
+        '  /    |',
+        '  / \  |'
+    ]
+
+    # mainline statements
     print(banner)
+
+    while not end_game:
+        guess = input("Guess a letter: ")
 
     return None
 
