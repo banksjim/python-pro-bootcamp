@@ -68,8 +68,15 @@ def main():
     # loop user guesses until the random word is guessed or the hanged man flag is true
 
         # clear the terminal screen
+        
+        ## -- move below
+        # show statement with the letter guessed as well as either:
+            # how many times the letter appeared in the word; or
+            # state the letter is not in the word and that you advance 1 step in hanging
 
-        # show the partially completed world list with each letter separated by a space
+        # skip a line in the terminal
+
+        # draw the current hanged tree between two blank lines
 
         # user guesses a letter
 
@@ -82,6 +89,8 @@ def main():
                     # no - the word was guessed correctly and end game = true
 
             # no - add a level to the hanged man, and increase the hanged level count
+    
+        # show the partially completed world list with each letter separated by a space
 
         end_game = True
 
