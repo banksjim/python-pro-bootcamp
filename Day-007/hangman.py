@@ -35,14 +35,18 @@ def main():
         clear_terminal()
 
         # initialize game-specific variables
-        game_over:    bool = False
         found_count:  int = 0
+        game_over:    bool = False
         guess:        str = ""
         hanged_level: int = 0
         hanged_man:   bool = False
+        letter_count: int
         random_word:  str = ""
         response:     str = ""
         winner:       bool = False
+
+        # initialize lists
+        guessed_word = []
 
         # initialize the gallows
         gallows = [
@@ -68,29 +72,36 @@ def main():
             game_over = True
 
         # set hanged_level to zero
+        hanged_level = 0
 
         while not game_over:
 
             # count the number of letters in the random_word
-
-            # initialize the letters of the random word in a list of letters
+            letter_count = len(random_word)
 
             # initialize a guessed_word list with '_''s for the user's guess of the word
+            guessed_word = ['_'] * len(random_word)
 
             # loop until the random_word is guessed or the hanged man flag is true
+            while (winner is False) and (hanged_man is False):
 
                 # prompt to guess the first letter letter
-                # guess = input("\nGuess a letter: ").lower()
+                guess = input("\nGuess a letter: ").lower()
 
                 # set found_count to zero
+                found_count = 0
 
                 # loop to check if the guess letter is in the word and count how many times
+                for idx in range(0, letter_count - 1):
 
                     # compare the guess to the random_word list in the current idx position
+                    if guess == random_word(idx):
 
-                        # if match
-                        # replace the guessed_word current position with upper guess letter
+                        # if match - replace guessed_word current position with guess letter
+                        guessed_word[idx] = guess
+
                         # bump found_count by 1
+                        found_count += 1
 
                 # if found_count == 0 then no matching letters were found in the word
 
