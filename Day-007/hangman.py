@@ -6,10 +6,10 @@ from shared_modules.system_modules import clear_terminal
 def main():
 
     # initialize static variables
-    play_again:   str = "Y"
+    play_again: str = "Y"
 
     # ASCII art variables
-    banner:       str = r'''
+    banner:     str = r'''
     .__                                                 
     |  |__ _____    ____    ____   _____ _____    ____  
     |  |  \\__  \  /    \  / ___\ /     \\__  \  /    \ 
@@ -35,15 +35,16 @@ def main():
         clear_terminal()
 
         # initialize game-specific variables
-        found_count:  int = 0
-        game_over:    bool = False
-        guess:        str = ""
-        hanged_level: int = 0
-        hanged_man:   bool = False
-        letter_count: int
-        random_word:  str = ""
-        response:     str = ""
-        winner:       bool = False
+        found_count:   int = 0
+        gallows_level: int = 2
+        game_over:     bool = False
+        guess:         str = ""
+        hanged_level:  int = 0
+        hanged_man:    bool = False
+        letter_count:  int
+        random_word:   str = ""
+        response:      str = ""
+        winner:        bool = False
 
         # initialize lists
         guessed_word = []
@@ -104,20 +105,25 @@ def main():
                         found_count += 1
 
                 # if found_count == 0 then no matching letters were found in the word
-
-                    # increase hanged_level by 1
+                if found_count == 0:
 
                     # update the gallows list
-                    # if hanged_level == 1
-                    # gallows idx of (hanged_level + 1) = hanged_man (hanged_level - 1)
-                    # elif hanged_level == 2 or 4
-                    # gallows idx of (hanged_level + 1) = hanged_man (hanged_level - 1)
-                    # else
-                    # gallows idx of (hanged_level) = hanged_man (hanged_level - 1)
+                    # if hanged_level <= 1 or hanged_level == 3 then add a body part
+                    if (hanged_level <= 1) or (hanged_level == 3):
+                        gallows[gallows_level] = hanged_man[hanged_level]
+                    # elif hanged_level == 2 or 4 then add an arm or leg at the same gallows_level
+                    elif (hanged_level == 2) or (hanged_level == 4):
+                        gallows[gallows_level - 1] = hanged_man[hanged_level]
 
-                    # if hanged_level == 5
-                    # set winner to false
-                    # set game_over to true
+                        # if hanged_level = 4 then fully hanged and game over
+                        if hanged_level == 4:
+                            winner = False
+                            game_over = True
+
+                    # if not game over then increase gallows_level and hanged_level by 1
+                    if hanged_level < 4:
+                        gallows_level += 1
+                        hanged_level += 1
 
                 # else
 
