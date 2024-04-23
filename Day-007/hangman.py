@@ -6,7 +6,7 @@ from shared_modules.system_modules import clear_terminal
 def main():
 
     # initialize static variables
-    play_again: str = "Y"
+    play_again: str = "y"
 
     # ASCII art variables
     banner:     str = r'''
@@ -29,7 +29,7 @@ def main():
     # mainline statements
 
     # repeat until user chooses not to play_again
-    while play_again == 'Y':
+    while play_again == 'y':
 
         # clear the terminal screen
         clear_terminal()
@@ -40,7 +40,6 @@ def main():
         game_over:     bool = False
         guess:         str = ""
         hanged_level:  int = 0
-        hanged_man:    bool = False
         letter_count:  int
         random_word:   str = ""
         response:      str = ""
@@ -84,7 +83,7 @@ def main():
             guessed_word = ['_'] * len(random_word)
 
             # loop until the random_word is guessed or the hanged man flag is true
-            while (winner is False) and (hanged_man is False):
+            while (winner is False) and (game_over is False):
 
                 # prompt to guess the first letter letter
                 guess = input("\nGuess a letter: ").lower()
@@ -117,43 +116,73 @@ def main():
 
                         # if hanged_level = 4 then fully hanged and game over
                         if hanged_level == 4:
+
+                            # set winner to false and game_over to true
                             winner = False
                             game_over = True
 
                     # if not game over then increase gallows_level and hanged_level by 1
                     if hanged_level < 4:
+
+                        # increase both gallows_level and hanged_level
                         gallows_level += 1
                         hanged_level += 1
 
-                # else
+                else:
 
                     # check the guessed_word for any remaining blank letters
+                    if '_' not in guessed_word:
 
-                    # if no remaining '_' letters
-
-                        # set winner to true
-                        # set game_over to true
+                        # set winner to true and game_over to true
+                        winner = True
+                        game_over = True
 
                 # clear the terminal screen
+                clear_terminal()
 
                 # show the guessed_word list with each letter separated by a space
+                for char in guessed_word:
+                    print(char, end=' ')
 
                 # announce the outcome of the last guess
                 # if the winner == true
+                if winner is True:
+
                     # show message -> "You win!\n"
+                    print('\nJustice has saved you. You win!\n')
+
                 # else if game_over == true and winner == false
+                elif (winner is False) and (game_over is True):
+
                     # show message -> "You've been hanged partner! You lose.\n"
+                    print('\nYou\'ve been hanged partner! You lose.\n')
+
                 # else if found_count > 0
+                elif found_count > 0:
+
                     # show message ->
                     # "You guessed '[guess]'. It appears in the word [found_count] times!\n"
+                    if found_count == 1:
+                        print(f'\nYou guessed \'{guess}\'. '
+                              f'It appears in the word {found_count} time.\n')
+                    else:
+                        print(f'\nYou guessed \'{guess}\'. '
+                              f'It appears in the word {found_count} times.\n')
+
                 # else
+                else:
+
                     # show message ->
                     # "You guessed '[guess]'. That's not in the word. One step closer to death.\n"
+                    print(f'\nYou guessed \'{guess}\'. '
+                          'That\'s not in the word. One step closer to death.\n')
 
                 # loop through drawing the current gallows line-by-line
+                for level in range(0, len(gallows) - 1):
+                    print(gallows[level])
 
-        # Ask user to play another game
-        # play_again = input("Play again (Y/N)? ").upper()
+    # Ask user to play another game
+    play_again = input('\nPlay again (Y/N)? ').lower()
 
     return None
 
