@@ -31,7 +31,6 @@ def main():
         game_over:     bool = False
         guess:         str = ""
         hanged_level:  int = 0
-        letter_count:  int
         random_word:   str = ""
         response:      str = ""
         winner:        bool = False
@@ -74,7 +73,6 @@ def main():
                 guess = input("\nGuess a letter: ").lower()
                 found_count = 0
 
-                #for idx in range(0, letter_count - 1):
                 for idx, letter in enumerate(random_word):
 
                     if guess == letter:
