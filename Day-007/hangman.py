@@ -31,7 +31,6 @@ def main():
         game_over:     bool = False
         guess:         str = ""
         hanged_level:  int = 0
-        letter_count:  int
         random_word:   str = ""
         response:      str = ""
         winner:        bool = False
@@ -66,7 +65,6 @@ def main():
 
         while not game_over:
 
-            letter_count = len(random_word)
             guessed_word = ['_'] * len(random_word)
 
             while (winner is False) and (game_over is False):
@@ -74,9 +72,9 @@ def main():
                 guess = input("\nGuess a letter: ").lower()
                 found_count = 0
 
-                for idx in range(0, letter_count - 1):
+                for idx, letter in enumerate(random_word):
 
-                    if guess == random_word[idx]:
+                    if guess == letter:
                         guessed_word[idx] = guess
                         found_count += 1
 
