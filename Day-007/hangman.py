@@ -74,9 +74,10 @@ def main():
                 guess = input("\nGuess a letter: ").lower()
                 found_count = 0
 
-                for idx in range(0, letter_count - 1):
+                #for idx in range(0, letter_count - 1):
+                for idx, letter in enumerate(random_word):
 
-                    if guess == random_word[idx]:
+                    if guess == letter:
                         guessed_word[idx] = guess
                         found_count += 1
 
