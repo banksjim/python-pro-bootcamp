@@ -65,7 +65,6 @@ def main():
 
         while not game_over:
 
-            letter_count = len(random_word)
             guessed_word = ['_'] * len(random_word)
 
             while (winner is False) and (game_over is False):
