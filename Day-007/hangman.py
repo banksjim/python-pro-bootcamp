@@ -1,5 +1,6 @@
 import requests
 
+from gallows import gallows_scaffold, hanged_man
 from hangman_banner import banner
 from shared_modules.system_modules import clear_terminal
 
@@ -7,14 +8,6 @@ from shared_modules.system_modules import clear_terminal
 def main():
 
     play_again: str = "y"
-
-    hanged_man = [
-        '   O   |',
-        '  /|   |',
-        '  /|\\  |',
-        '  /    |',
-        '  / \\  |'
-    ]
 
     while play_again == 'y':
 
@@ -28,18 +21,12 @@ def main():
         winner:        bool = False
 
         # initialize lists
+        gallows      = []
         guessed_word = []
 
         # initialize the gallows
-        gallows = [
-            '   +---+',
-            '   |   |',
-            '       |',
-            '       |',
-            '       |',
-            '       |',
-            '=========='
-        ]
+        for idx, level in enumerate(gallows_scaffold):
+            gallows.append(level)
 
         clear_terminal()
         print(banner)
