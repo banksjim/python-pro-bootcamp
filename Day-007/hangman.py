@@ -21,8 +21,9 @@ def main():
         winner:        bool = False
 
         # initialize lists
-        gallows      = []
-        guessed_word = []
+        gallows         = []
+        guessed_letters = []
+        guessed_word    = []
 
         # initialize the gallows
         for idx, level in enumerate(gallows_scaffold):
@@ -48,7 +49,13 @@ def main():
 
             while (winner is False) and (game_over is False):
 
-                guess = input("\nGuess a letter: ").lower()
+                guess = input('\nGuess a letter: ').lower()
+
+                while guess in guessed_letters:
+                    print(f'You previously guessed the letter \'{guess}\'')
+                    guess = input('\nGuess again: ').lower()
+
+                guessed_letters.append(guess)
                 found_count = 0
 
                 for idx, letter in enumerate(random_word):
