@@ -1,28 +1,13 @@
 import requests
 
+from gallows import gallows_scaffold, hanged_man
+from hangman_banner import banner
 from shared_modules.system_modules import clear_terminal
 
 # main() program logic module
 def main():
 
     play_again: str = "y"
-
-    banner:     str = r'''
-    .__                                                 
-    |  |__ _____    ____    ____   _____ _____    ____  
-    |  |  \\__  \  /    \  / ___\ /     \\__  \  /    \ 
-    |   Y  \/ __ \|   |  \/ /_/  >  Y Y  \/ __ \|   |  \
-    |___|  (____  /___|  /\___  /|__|_|  (____  /___|  /
-         \/     \/     \//_____/       \/     \/     \/ 
-    '''
-
-    hanged_man = [
-        '   O   |',
-        '  /|   |',
-        '  /|\\  |',
-        '  /    |',
-        '  / \\  |'
-    ]
 
     while play_again == 'y':
 
@@ -36,18 +21,13 @@ def main():
         winner:        bool = False
 
         # initialize lists
-        guessed_word = []
+        gallows         = []
+        guessed_letters = []
+        guessed_word    = []
 
         # initialize the gallows
-        gallows = [
-            '   +---+',
-            '   |   |',
-            '       |',
-            '       |',
-            '       |',
-            '       |',
-            '=========='
-        ]
+        for idx, level in enumerate(gallows_scaffold):
+            gallows.append(level)
 
         clear_terminal()
         print(banner)
@@ -69,7 +49,13 @@ def main():
 
             while (winner is False) and (game_over is False):
 
-                guess = input("\nGuess a letter: ").lower()
+                guess = input('\nGuess a letter: ').lower()
+
+                while guess in guessed_letters:
+                    print(f'You previously guessed the letter \'{guess}\'')
+                    guess = input('\nGuess again: ').lower()
+
+                guessed_letters.append(guess)
                 found_count = 0
 
                 for idx, letter in enumerate(random_word):
