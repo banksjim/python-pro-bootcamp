@@ -1,20 +1,12 @@
 import requests
 
+from hangman_banner import banner
 from shared_modules.system_modules import clear_terminal
 
 # main() program logic module
 def main():
 
     play_again: str = "y"
-
-    banner:     str = r'''
-    .__                                                 
-    |  |__ _____    ____    ____   _____ _____    ____  
-    |  |  \\__  \  /    \  / ___\ /     \\__  \  /    \ 
-    |   Y  \/ __ \|   |  \/ /_/  >  Y Y  \/ __ \|   |  \
-    |___|  (____  /___|  /\___  /|__|_|  (____  /___|  /
-         \/     \/     \//_____/       \/     \/     \/ 
-    '''
 
     hanged_man = [
         '   O   |',
