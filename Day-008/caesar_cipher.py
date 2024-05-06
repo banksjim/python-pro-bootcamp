@@ -11,11 +11,11 @@ def main():
     while run_again == 'y':
 
         # initialize session variables
-        ciphered_messsage: str = ''
-        encode_option:     str = ''
-        message:           str = ''
-        shift:             int = 0
-        shift_input:       str = ''
+        ciphered_message: str = ''
+        encode_option:    str = ''
+        message:          str = ''
+        shift:            int = 0
+        shift_input:      str = ''
 
         # clear the terminal screen
         clear_terminal()
@@ -49,7 +49,7 @@ def main():
 
             # invalid encode or decode option selection
             print('\nInvalid option selected.')
-    
+
         # ask if user wants to run the app again
         run_again = input('\nRun the application again (y/n)? ').lower()
 
