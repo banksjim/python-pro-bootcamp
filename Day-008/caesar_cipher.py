@@ -12,36 +12,51 @@ def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
 
     alphabet = list(string.ascii_lowercase)
 
-    if encode_option == 'encode':
+    # determine the length of the msg
+    msg_length = len(msg)
 
-        # determine the length of the msg
-        msg_length = len(msg)
+    # iterate through the msg characters
+    for idx in range(0, msg_length):
 
-        # iterate through the msg characters
-        for idx in range(0, msg_length):
+        # check if the current character in the msg is alphabetic
+        if msg[idx] in alphabet:
 
-            # check if the current character in the msg is alphabetic
-            if msg[idx] in alphabet:
+            # determine position of the current msg char in the alphabet
+            alphabet_loc = alphabet.index(msg[idx])
 
-                # determine position of the current msg char in the alphabet
-                alphabet_loc = alphabet.index(msg[idx])
+            if encode_option == 'encode':
 
-                # determine if the position of the msg(idx) char + the shift
-                # value will exceed the alphabet list and need to wrap
-                if alphabet_loc + shift_value < 26:
+                # determine if the position of the msg(idx) char + the
+                # shift_value will exceed the alphabet list and need to
+                # wrap forward from the beginning of the alphabet
+                if (alphabet_loc + shift_value) < 26:
                     # calculate the replacement_char_idx position from
                     # alphabet_loc + shift_value
                     replacement_char_idx = alphabet_loc + shift_value
                 else:
                     # calculate the replacement_char_idx position from
                     # shift_value - (25 - alphabet_loc)
-                    replacement_char_idx = (shift_value - (25 - alphabet_loc)) - 1
+                    replacement_char_idx = shift_value - (26 - alphabet_loc)
 
-                # build replacement string
-                result_string += alphabet[replacement_char_idx]
+            elif encode_option == 'decode':
 
-            else:
-                result_string += msg[idx]
+                # determine if the position of the msg(idx) char - the
+                # shift_value will be less than 0 causing a need to wrap
+                # backwards through the alphabet
+                if (alphabet_loc - shift_value) >= 0:
+                    # calculate the replacement_char_idx position from
+                    # alphabet_loc - shift_value
+                    replacement_char_idx = alphabet_loc - shift_value
+                else:
+                    # calculate the replacement_char_idx position from
+                    # 26 - (shift_value - alphabet_loc)
+                    replacement_char_idx = 26 - (shift_value - alphabet_loc)
+
+            # build replacement string
+            result_string += alphabet[replacement_char_idx]
+
+        else:
+            result_string += msg[idx]
 
     return result_string
 
