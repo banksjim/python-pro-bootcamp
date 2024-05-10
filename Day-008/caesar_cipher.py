@@ -56,7 +56,7 @@ def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
             result_string += alphabet[replacement_char_idx]
 
         else:
-            result_string += msg[idx]
+            result_string += letter
 
     return result_string
 
