@@ -16,13 +16,13 @@ def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
     msg_length = len(msg)
 
     # iterate through the msg characters
-    for idx in range(0, msg_length):
+    for letter in msg:
 
         # check if the current character in the msg is alphabetic
-        if msg[idx] in alphabet:
+        if letter in alphabet:
 
             # determine position of the current msg char in the alphabet
-            alphabet_loc = alphabet.index(msg[idx])
+            alphabet_loc = alphabet.index(letter)
 
             if encode_option == 'encode':
 
