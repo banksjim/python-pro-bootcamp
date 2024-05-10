@@ -1,5 +1,49 @@
+import string
 from shared_modules.system_modules import clear_terminal
 from caesar_cipher_banner import banner
+
+def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
+
+    # initialize variables
+    alphabet_loc:         int = 0
+    msg_length:           int = 0
+    replacement_char_idx: int = 0
+    result_string:        str = ''
+
+    alphabet = list(string.ascii_lowercase)
+
+    if encode_option == 'encode':
+
+        # determine the length of the msg
+        msg_length = len(msg)
+
+        # iterate through the msg characters
+        for idx in range(0, msg_length):
+
+            # check if the current character in the msg is alphabetic
+            if msg[idx] in alphabet:
+
+                # determine position of the current msg char in the alphabet
+                alphabet_loc = alphabet.index(msg[idx])
+
+                # determine if the position of the msg(idx) char + the shift
+                # value will exceed the alphabet list and need to wrap
+                if alphabet_loc + shift_value < 26:
+                    # calculate the replacement_char_idx position from
+                    # alphabet_loc + shift_value
+                    replacement_char_idx = alphabet_loc + shift_value
+                else:
+                    # calculate the replacement_char_idx position from
+                    # shift_value - (25 - alphabet_loc)
+                    replacement_char_idx = (shift_value - (25 - alphabet_loc)) - 1
+
+                # build replacement string
+                result_string += alphabet[replacement_char_idx]
+
+            else:
+                result_string += msg[idx]
+
+    return result_string
 
 # main() program logic module
 def main():
@@ -11,11 +55,11 @@ def main():
     while run_again == 'y':
 
         # initialize session variables
-        ciphered_message: str = ''
-        encode_option:    str = ''
-        message:          str = ''
-        shift:            int = 0
-        shift_input:      str = ''
+        encode_option:  str = ''
+        message:        str = ''
+        message_result: str = ''
+        shift:          int = 0
+        shift_input:    str = ''
 
         # clear the terminal screen
         clear_terminal()
@@ -41,6 +85,15 @@ def main():
 
                 # assign shift_input to an integer var
                 shift = int(shift_input)
+
+                # encode / decode message
+                message_result = encode_decode(message, encode_option, shift)
+
+                # output results
+                if encode_option == 'encode':
+                    print(f'Here\'s your encoded result: {message_result}')
+                else:
+                    print(f'Here\'s your decoded result: {message_result}')
 
             else:
                 print('\nShift value must be a number between 1 and 25.')
