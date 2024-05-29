@@ -1,19 +1,16 @@
 import string
-from shared_modules.system_modules import clear_terminal
+
 from caesar_cipher_banner import banner
+from shared_modules.system_modules import clear_terminal
 
 def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
 
     # initialize variables
     alphabet_loc:         int = 0
-    msg_length:           int = 0
     replacement_char_idx: int = 0
     result_string:        str = ''
 
     alphabet = list(string.ascii_lowercase)
-
-    # determine the length of the msg
-    msg_length = len(msg)
 
     # iterate through the msg characters
     for letter in msg:
@@ -101,17 +98,19 @@ def main():
                 # assign shift_input to an integer var
                 shift = int(shift_input)
 
-                # encode / decode message
-                message_result = encode_decode(message, encode_option, shift)
+                if shift > 0 and shift <= 25:
 
-                # output results
-                if encode_option == 'encode':
-                    print(f'Here\'s your encoded result: {message_result}')
+                    # encode / decode message
+                    message_result = encode_decode(message, encode_option, shift)
+
+                    # output results
+                    print(f'\nHere\'s your {encode_option}d result: {message_result}')
+
                 else:
-                    print(f'Here\'s your decoded result: {message_result}')
+                    print('\nShift value must be between 1 and 25.')
 
             else:
-                print('\nShift value must be a number between 1 and 25.')
+                print('\nShift value must be a whole number.')
 
         else:
 
