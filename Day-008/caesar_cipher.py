@@ -6,14 +6,10 @@ def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
 
     # initialize variables
     alphabet_loc:         int = 0
-    msg_length:           int = 0
     replacement_char_idx: int = 0
     result_string:        str = ''
 
     alphabet = list(string.ascii_lowercase)
-
-    # determine the length of the msg
-    msg_length = len(msg)
 
     # iterate through the msg characters
     for letter in msg:
