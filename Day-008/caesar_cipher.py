@@ -1,6 +1,7 @@
 import string
-from shared_modules.system_modules import clear_terminal
+
 from caesar_cipher_banner import banner
+from shared_modules.system_modules import clear_terminal
 
 def encode_decode(msg: str = '', encode_option: str = 0, shift_value: int = 0):
 
