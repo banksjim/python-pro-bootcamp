@@ -105,10 +105,7 @@ def main():
                 message_result = encode_decode(message, encode_option, shift)
 
                 # output results
-                if encode_option == 'encode':
-                    print(f'Here\'s your encoded result: {message_result}')
-                else:
-                    print(f'Here\'s your decoded result: {message_result}')
+                print(f'\nHere\'s your {encode_option}d result: {message_result}')
 
             else:
                 print('\nShift value must be a number between 1 and 25.')
