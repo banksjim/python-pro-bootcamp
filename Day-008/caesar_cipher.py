@@ -96,7 +96,7 @@ def main():
 
                 # assign shift_input to an integer var
                 shift = int(shift_input)
-                
+
                 if shift > 0 and shift <= 25:
 
                     # encode / decode message
@@ -104,9 +104,9 @@ def main():
 
                     # output results
                     print(f'\nHere\'s your {encode_option}d result: {message_result}')
-                    
+
                 else:
-                    print('\nShift value must be between 1 and 25.')    
+                    print('\nShift value must be between 1 and 25.')
 
             else:
                 print('\nShift value must be a whole number.')
