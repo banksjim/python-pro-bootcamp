@@ -40,7 +40,7 @@ def main():
     for key in programming_dictionary:
         print(key)
         print(programming_dictionary[key])
-  
+
     # Recommend method for looping through dictionary content
     for pl_dict_key, pl_dict_value in programming_dictionary.items():
         print(pl_dict_key)
