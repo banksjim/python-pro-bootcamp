@@ -2,4 +2,5 @@
 disable=
     C0103, # constants declaration doesn't conform to UPPERCASE naming convention
     C0114, # missing-module-docstring
-    C0116  # missing-function-docstring    
+    C0116, # missing-function-docstring
+    C0303  # trailing whitespace
