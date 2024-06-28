@@ -13,7 +13,7 @@ def main():
     auction_winning_bid: float = 0.00
     bid_amount:          float = 0.00
     bidder_name:         str = ""
-    continue_bidding:    bool = True
+    bidding_complete:    bool = False
     
     auction_dictionary = {}
 
@@ -24,7 +24,7 @@ def main():
     print("Welcome to the secret auction program.\n")
     
     # collect all auction bids
-    while continue_bidding:
+    while not bidding_complete:
         bidder_name = input("What is your name?: ")
         bid_amount = float(input("Bid amount?: $"))
         
@@ -36,9 +36,9 @@ def main():
         
         if (additional_bidders == 'y') or (additional_bidders == 'yes'):
             clear_terminal()
-            continue_bidding = True
+            bidding_complete = False
         else:
-            continue_bidding = False
+            bidding_complete = True
     
     # determine who made the highest bid
     for dict_bidder_name, dict_bid_amount in auction_dictionary.items():
@@ -48,7 +48,8 @@ def main():
     
     # clear the terminal and print the auction winner
     clear_terminal()
-    print(F"The auction winner is {auction_winner_name} with a bid of ${auction_winning_bid:.2f}.\n")
+    print(f"The auction winner is {auction_winner_name} "
+          f"with a bid of ${auction_winning_bid:.2f}.\n")
     
     return None
 
