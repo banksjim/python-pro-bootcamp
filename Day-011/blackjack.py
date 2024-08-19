@@ -29,16 +29,18 @@ def main():
 
     # mainline statements
 
-    while end_game is False:
+    # while end_game is False:
 
-        # clear the terminal screen
-        clear_terminal()
+    # clear the terminal screen
+    clear_terminal()
 
-        # print the application banner
-        print(banner)
+    # print the application banner
+    print(banner)
 
-        # Ask user to play another game
-        end_game = check_play_again()
+    # Ask user to play another game
+    end_game = check_play_again()
+    if end_game is False:
+        main()
 
     return None
 
