@@ -20,7 +20,8 @@ def check_play_again():
 def main():
 
     # initialize function variables
-    end_game: bool = False
+    hand_over: bool = False
+    game_over: bool = False
     
     cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
     card_values = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -28,18 +29,41 @@ def main():
     players_hand = []    
 
     # mainline statements
-
-    # while end_game is False:
-
-    # clear the terminal screen
+    
+    # clear the terminal screenNo 
     clear_terminal()
 
     # print the application banner
     print(banner)
+    
+    # Deal player's first two cards
+    
+    
+    # Deal computer's first two cards
+    
+    
+    # Loop until hand over
+    
+    
+        # Add player and computer scores
+        # Change score for Ace from 11 to 1 if a total score is > 21
+        
+        
+        # Check for blackjack
+        
+        
+        # Declare winner or push
+        
+        
+        # Ask player for hit or stand
+        
+        
+        # Computer hit or stand  
+
 
     # Ask user to play another game
-    end_game = check_play_again()
-    if end_game is False:
+    game_over = check_play_again()
+    if game_over is False:
         main()
 
     return None
