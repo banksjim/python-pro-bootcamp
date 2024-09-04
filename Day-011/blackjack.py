@@ -8,6 +8,7 @@ cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
 # check_play_again() - Check if the player wants to play another round
 def check_play_again():
+    
     # initialize function variables
     play_again: str = 'n'
        
@@ -22,8 +23,28 @@ def check_play_again():
     else:
         return check_play_again()
 
+# compute_score() - Add up and return the score for each player
+def compute_score(current_hand):
+    
+    # initialize function variables
+    calculated_score: int = 0
+    card:             str = ""
+    card_index:       int = 0
+    card_value:       int = 0
+    
+    card_values = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+    
+    for card in current_hand:
+        card_index = cards.index(card)
+        card_value = card_values[card_index]
+        calculated_score += card_value
+    
+    return calculated_score
+    
+
 # deal_cards() - Deals any player 1 or 2 random cards from the cards list
 def deal_cards(number_of_cards: int = 0):
+    
     # initialize function variables
     draw1: str = ""
     draw2: str = ""  
@@ -42,12 +63,13 @@ def deal_cards(number_of_cards: int = 0):
 def main():
 
     # initialize function variables
-    card1:     str = ""
-    card2:     str = ""
-    hand_over: bool = False
-    game_over: bool = False
+    card1:               str = ""
+    card2:               str = ""
+    computer_hand_value: int = 0
+    hand_over:           bool = False
+    game_over:           bool = False
+    player_hand_value:   int = 0
     
-    card_values = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
     computers_hand = []
     players_hand = []    
 
@@ -64,26 +86,25 @@ def main():
     
     players_hand.append(card1)
     players_hand.append(card2)
-    
-    # move to Show hands below
-    print(f'Your hand: {", ".join(players_hand)}')
-    
+
     # Deal computer's first two cards
     card1, card2 = deal_cards(2)
     
     computers_hand.append(card1)
     computers_hand.append(card2)
     
-    # move to Show hands below
-    print(f'Your hand: {", ".join(computers_hand[1:])}')
-    
     # Loop until hand is over
-    
+    while hand_over is False:
+
         # Add player and computer scores
         # Change score for Ace from 11 to 1 if a total score is > 21
-        
-        # Show hands
-        
+        player_hand_value = compute_score(players_hand)
+        #computer_hand_value = compute_score(computers_hand)
+    
+        # Show hands and player's score
+        print(f'Your hand:     {", ".join(players_hand)}. Hand value: {player_hand_value}')
+        print(f'Dealer\'s hand: {", ".join(computers_hand[1:])}')
+           
         # Check for blackjack
         
         
@@ -94,7 +115,9 @@ def main():
         
         
         # Computer hit or stand  
-
+        
+        #//// Temp break hand_over while loop ////
+        hand_over = True
 
     # Ask user to play another game
     game_over = check_play_again()
