@@ -29,15 +29,11 @@ def compute_score(current_hand):
     # initialize function variables
     calculated_score: int = 0
     card:             str = ""
-    card_index:       int = 0
-    card_value:       int = 0
     
     card_values = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
     
     for card in current_hand:
-        card_index = cards.index(card)
-        card_value = card_values[card_index]
-        calculated_score += card_value
+        calculated_score += card_values[cards.index(card)]
     
     return calculated_score
     
