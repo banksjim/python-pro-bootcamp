@@ -1,9 +1,13 @@
 import random
+import time
 
 from blackjack_banner import banner
 from shared_modules.system_modules import clear_terminal
 
 # declare static global variables
+dealer_score: int = 0
+player_score:   int = 0 
+
 cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
 # check_play_again() - Check if the player wants to play another round
@@ -18,7 +22,7 @@ def check_play_again():
     if play_again == 'y' or play_again == 'yes':
         return False
     elif play_again == 'n' or play_again == 'no':
-        print("Goodbye!")
+        print('Goodbye!')
         return True
     else:
         return check_play_again()
@@ -28,7 +32,7 @@ def compute_score(current_hand):
     
     # initialize function variables
     calculated_score: int = 0
-    card:             str = ""
+    card:             str = ''
     
     card_values = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
     
@@ -40,7 +44,7 @@ def compute_score(current_hand):
     # then reduce each ace to a value of 11 to 1
     # until score < 21 (if possible)
     for card in current_hand:
-        if (calculated_score > 21) and (card == "A"):
+        if (calculated_score > 21) and (card == 'A'):
             calculated_score -= 10
     
     return calculated_score
@@ -49,8 +53,8 @@ def compute_score(current_hand):
 def deal_cards(number_of_cards: int = 0):
     
     # initialize function variables
-    draw1: str = ""
-    draw2: str = ""  
+    draw1: str = ''
+    draw2: str = ''  
     
     # deal card(s) and handle out of bounds function call
     draw1 = random.choice(cards)
@@ -61,18 +65,26 @@ def deal_cards(number_of_cards: int = 0):
         draw2 = random.choice(cards)
         return draw1, draw2
     else: 
-        print("Error: Call to deal_cards must pass 1 or 2.")
+        print('Error: Call to deal_cards must pass 1 or 2.')
 
 # hit_or_stand() - Hand dealer and user action for hit or stand
-def hit_or_stand(person_up: str = ""):
+def hit_or_stand(person_up: str = '', hand_value: int = 0):
     
     # initialize function variables
-    hit:      str = ""
-    hit_card: str = ""
+    hit:        str = ''
+    hit_card:   str = ''
         
-    if person_up == "P":
-        hit = input('\nHit another card (y/n)? ').lower()            
-    
+    # Handle hit or stand
+    if person_up == 'Player':
+        hit = input('\nHit another card (y/n)? ').lower()
+    elif person_up == 'Dealer':
+        if hand_value < 17:
+            hit = 'y'
+        else:
+            hit = 'n'
+    else:
+        print('Error: Call to hit_or_stand must pass "Player" or "Dealer".')
+
     # handle hit or stand responses, or out of bounds function call
     if hit == 'y' or hit == 'yes':
         hit_card = deal_cards(1) 
@@ -86,13 +98,18 @@ def hit_or_stand(person_up: str = ""):
 # main() program logic module
 def main():
 
-    # initialize function variables
-    card1:               str = ""
-    card2:               str = ""
+    # declare global variables
+    global dealer_score
+    global player_score
+        
+    # initialize function variables   
+    card1:               str = ''
+    card2:               str = ''
+    computer_stands:     bool = False
     computer_hand_value: int = 0
     computer_wins:       bool = False
     game_over:           bool = False
-    player_hand_over:    bool = False
+    player_stands:       bool = False
     player_hand_value:   int = 0
     player_wins:         bool = False
     
@@ -112,7 +129,7 @@ def main():
     computers_hand.append(card2)
     
     # Loop until hand is over
-    while player_hand_over is False:
+    while player_wins is False and computer_wins is False:
 
         # Add player and computer scores
         # Change score for Ace from 11 to 1 if a total score is > 21
@@ -125,47 +142,91 @@ def main():
         # print the application banner
         print(banner)
     
+        # print the current score
+        print(f'Player: {player_score} | Dealer: {dealer_score}\n')
+    
         # Show hands and player's score
-        print(f'Your hand:     {", ".join(players_hand)}. Hand value: {player_hand_value}')
-        print(f'Dealer\'s hand: _, {", ".join(computers_hand[1:])}. ' \
-              f'Hand value: {computer_hand_value}')
+        print(f'Your hand:     {", ".join(players_hand)}')
+        print(f'Dealer\'s hand: _, {", ".join(computers_hand[1:])}') 
            
-        # Check player and dealer for blackjack
+        # Check player for blackjack
         if player_hand_value == 21:
             player_wins = True
-            print('Player has Blackjack! Congratulations!')
+            print('\nPlayer has Blackjack! Congratulations!')
             
+        # Check dealer for blackjack
         if computer_hand_value == 21:
             computer_wins = True
             
             if player_wins is False:
-                print('Dealer has Blackjack!')
+                print('\nDealer has Blackjack!')
             else:
-                print('But... The Dealer also Blackjack!')
+                print('But... The Dealer also Blackjack!')       
         
-        # Declare winner or push
+        # Check player for busted
+        if player_hand_value > 21:
+            computer_wins = True
+            print(f'\nPlayer has BUSTED with a hand value of {player_hand_value}!')
+            
+        # Check dealer for busted
+        if computer_hand_value > 21:
+            player_wins = True
+            print('\nDealer has BUSTED!')
         
+        # Check if both player and dealer stand
+        if player_stands is True and computer_stands is True:
+            if player_hand_value > computer_hand_value:
+                player_wins = True
+            elif player_hand_value < computer_hand_value:
+                computer_wins = True
+            else:
+                player_wins = True
+                computer_wins = True                
+        
+        # Declare winner or push        
         if player_wins is True and computer_wins is True:
-            print(f'\nDealer\'s hand was: {", ".join(computers_hand)}')
-            print('Game ends in a push.')
+            print(f'\nDealer\'s hand is: {", ".join(computers_hand)}. ' \
+                  f'Hand value: {computer_hand_value}')
+            print('\nGame ends in a push.')
         elif player_wins is True:
-            print(f'\nDealer\'s hand was: {", ".join(computers_hand)}')
-            print('The player WINS!')
+            player_score += 1
+            print(f'\nDealer\'s hand was: {", ".join(computers_hand)}. ' \
+                  f'Hand value: {computer_hand_value}')
+            print('\nThe player WINS!')
         elif computer_wins is True:
-            print(f'\nDealer\'s hand was: {", ".join(computers_hand)}')
-            print('The dealer WINS!')
-            
-        # Player for hit or stand
+            dealer_score += 1
+            print(f'\nDealer\'s hand was: {", ".join(computers_hand)}. ' \
+                  f'Hand value: {computer_hand_value}')
+            print('\nThe dealer WINS!')
+
+        # Hit or stand
         if player_wins is False and computer_wins is False:
-            
-            card1 = hit_or_stand('P')
-            
-            if card1 != "STAND":
-                players_hand.append(card1)
-            else:
-                player_hand_over = True          
+           
+            # Player hit or stand
+            if player_stands is False:
+                card1 = hit_or_stand('Player')
+                
+                if card1 != 'STAND':
+                    print('\n--> Player draws...')
+                    time.sleep(3) 
+                    players_hand.append(card1)
+                else:
+                    player_stands = True
+                    print('\n--> Player stands...')
+                    time.sleep(3)          
         
-        # Computer hit or stand      
+            # Computer hit or stand
+            if computer_stands is False:
+                card1 = hit_or_stand('Dealer', computer_hand_value)
+                
+                if card1 != 'STAND':                       
+                    print('\n--> Dealer draws...')
+                    time.sleep(3)
+                    computers_hand.append(card1)
+                else:
+                    computer_stands = True
+                    print('\n--> Dealer stands...')
+                    time.sleep(3)    
 
     # Ask user to play another game
     game_over = check_play_again()
