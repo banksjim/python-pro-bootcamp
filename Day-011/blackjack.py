@@ -6,7 +6,7 @@ from shared_modules.system_modules import clear_terminal
 
 # declare static global variables
 dealer_score: int = 0
-player_score:   int = 0 
+player_score: int = 0 
 
 cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
