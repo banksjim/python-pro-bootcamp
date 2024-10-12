@@ -40,8 +40,8 @@ def compute_score(current_hand):
     for card in current_hand:
         calculated_score += card_values[cards.index(card)]
     
-    # if calculated_score over 21 and aces are in the hand
-    # then reduce each ace to a value of 11 to 1
+    # if calculated_score is over 21 and aces are in the hand
+    # then reduce each ace from a value of 11 to 1
     # until score < 21 (if possible)
     for card in current_hand:
         if (calculated_score > 21) and (card == 'A'):
@@ -50,29 +50,22 @@ def compute_score(current_hand):
     return calculated_score
 
 # deal_cards() - Deals any player 1 or 2 random cards from the cards list
-def deal_cards(number_of_cards: int = 0):
+def deal_card():
     
     # initialize function variables
-    draw1: str = ''
-    draw2: str = ''  
+    draw: str = ''
     
-    # deal card(s) and handle out of bounds function call
-    draw1 = random.choice(cards)
+    # deal card and handle out of bounds function call
+    draw = random.choice(cards)
             
-    if number_of_cards == 1:    
-        return draw1
-    elif number_of_cards == 2:
-        draw2 = random.choice(cards)
-        return draw1, draw2
-    else: 
-        print('Error: Call to deal_cards must pass 1 or 2.')
+    return draw
 
 # hit_or_stand() - Hand dealer and user action for hit or stand
 def hit_or_stand(person_up: str = '', hand_value: int = 0):
     
     # initialize function variables
     hit:        str = ''
-    hit_card:   str = ''
+    draw_card:       str = ''
         
     # Handle hit or stand
     if person_up == 'Player':
@@ -87,11 +80,11 @@ def hit_or_stand(person_up: str = '', hand_value: int = 0):
 
     # handle hit or stand responses, or out of bounds function call
     if hit == 'y' or hit == 'yes':
-        hit_card = deal_cards(1) 
-        return hit_card
+        draw_card = deal_card() 
+        return draw_card
     elif hit == 'n' or hit == 'no':
-        hit_card = "STAND"
-        return hit_card
+        draw_card = "STAND"
+        return draw_card
     else:
         return hit_or_stand(person_up)                
 
@@ -103,8 +96,7 @@ def main():
     global player_score
         
     # initialize function variables   
-    card1:               str = ''
-    card2:               str = ''
+    draw_card:           str = ''
     computer_stands:     bool = False
     computer_hand_value: int = 0
     computer_wins:       bool = False
@@ -116,17 +108,10 @@ def main():
     computers_hand = []
     players_hand = []    
       
-    # Deal player's first two cards
-    card1, card2 = deal_cards(2)
-    
-    players_hand.append(card1)
-    players_hand.append(card2)
-
-    # Deal computer's first two cards
-    card1, card2 = deal_cards(2)
-    
-    computers_hand.append(card1)
-    computers_hand.append(card2)
+    # Deal first two cards for player and dealer
+    for _ in range(2):    
+        players_hand.append(deal_card())
+        computers_hand.append(deal_card())
     
     # Loop until hand is over
     while player_wins is False and computer_wins is False:
@@ -204,12 +189,12 @@ def main():
            
             # Player hit or stand
             if player_stands is False:
-                card1 = hit_or_stand('Player')
+                draw_card = hit_or_stand('Player')
                 
-                if card1 != 'STAND':
+                if draw_card != 'STAND':
                     print('\n--> Player draws...')
                     time.sleep(3) 
-                    players_hand.append(card1)
+                    players_hand.append(draw_card)
                 else:
                     player_stands = True
                     print('\n--> Player stands...')
@@ -217,12 +202,12 @@ def main():
         
             # Computer hit or stand
             if computer_stands is False:
-                card1 = hit_or_stand('Dealer', computer_hand_value)
+                draw_card = hit_or_stand('Dealer', computer_hand_value)
                 
-                if card1 != 'STAND':                       
+                if draw_card != 'STAND':                       
                     print('\n--> Dealer draws...')
                     time.sleep(3)
-                    computers_hand.append(card1)
+                    computers_hand.append(draw_card)
                 else:
                     computer_stands = True
                     print('\n--> Dealer stands...')
