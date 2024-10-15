@@ -22,7 +22,7 @@ def check_play_again():
     if play_again == 'y' or play_again == 'yes':
         return False
     elif play_again == 'n' or play_again == 'no':
-        print('Goodbye!')
+        print('Goodbye!\n\n')
         return True
     else:
         return check_play_again()
@@ -86,7 +86,18 @@ def hit_or_stand(person_up: str = '', hand_value: int = 0):
         draw_card = "STAND"
         return draw_card
     else:
-        return hit_or_stand(person_up)                
+        return hit_or_stand(person_up)
+    
+# reset_screen() - Reset the game screen and show updated score
+def reset_screen():
+    # clear the terminal screen 
+    clear_terminal()
+
+    # print the application banner
+    print(banner)
+
+    # print the current score
+    print(f'Player: {player_score} | Dealer: {dealer_score}\n')    
 
 # main() program logic module
 def main():
@@ -115,20 +126,13 @@ def main():
     
     # Loop until hand is over
     while player_wins is False and computer_wins is False:
+        # Update the game screen
+        reset_screen()
 
         # Add player and computer scores
         # Change score for Ace from 11 to 1 if a total score is > 21
         player_hand_value = compute_score(players_hand)
         computer_hand_value = compute_score(computers_hand)
-    
-        # clear the terminal screen 
-        clear_terminal()
-
-        # print the application banner
-        print(banner)
-    
-        # print the current score
-        print(f'Player: {player_score} | Dealer: {dealer_score}\n')
     
         # Show hands and player's score
         print(f'Your hand:     {", ".join(players_hand)}')
@@ -151,7 +155,7 @@ def main():
         # Check player for busted
         if player_hand_value > 21:
             computer_wins = True
-            print(f'\nPlayer has BUSTED with a hand value of {player_hand_value}!')
+            print('\nPlayer has BUSTED!')
             
         # Check dealer for busted
         if computer_hand_value > 21:
@@ -160,29 +164,58 @@ def main():
         
         # Check if both player and dealer stand
         if player_stands is True and computer_stands is True:
+            print('\nBoth the player and dealer stand.')
+            
             if player_hand_value > computer_hand_value:
                 player_wins = True
             elif player_hand_value < computer_hand_value:
                 computer_wins = True
             else:
                 player_wins = True
-                computer_wins = True                
+                computer_wins = True
         
         # Declare winner or push        
         if player_wins is True and computer_wins is True:
-            print(f'\nDealer\'s hand is: {", ".join(computers_hand)}. ' \
-                  f'Hand value: {computer_hand_value}')
+            input('\nPress ENTER key to continue...')
+            
+            # Update the game screen
+            reset_screen()
+
             print('\nGame ends in a push.')
+
+            print(f'\nPlayer\'s hand was: {", ".join(players_hand)}. ' \
+                  f'Hand value: {player_hand_value}')            
+            print(f'\nDealer\'s hand was: {", ".join(computers_hand)}. ' \
+                  f'Hand value: {computer_hand_value}')            
         elif player_wins is True:
             player_score += 1
+            
+            input('\nPress ENTER key to continue...')
+
+            # Update the game screen
+            reset_screen()
+            
+            print('\nThe player WINS!')
+
+            print(f'\nPlayer\'s hand was: {", ".join(players_hand)}. ' \
+                  f'Hand value: {player_hand_value}')            
             print(f'\nDealer\'s hand was: {", ".join(computers_hand)}. ' \
                   f'Hand value: {computer_hand_value}')
-            print('\nThe player WINS!')
+            
         elif computer_wins is True:
             dealer_score += 1
+
+            input('\nPress ENTER key to continue...')
+
+            # Update the game screen
+            reset_screen()
+            
+            print('\nThe dealer WINS!')
+
+            print(f'\nPlayer\'s hand was: {", ".join(players_hand)}. ' \
+                  f'Hand value: {player_hand_value}')            
             print(f'\nDealer\'s hand was: {", ".join(computers_hand)}. ' \
                   f'Hand value: {computer_hand_value}')
-            print('\nThe dealer WINS!')
 
         # Hit or stand
         if player_wins is False and computer_wins is False:
