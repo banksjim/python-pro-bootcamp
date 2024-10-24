@@ -65,7 +65,7 @@ def hit_or_stand(person_up: str = '', hand_value: int = 0):
     
     # initialize function variables
     hit:        str = ''
-    draw_card:       str = ''
+    draw_card:  str = ''
         
     # Handle hit or stand
     if person_up == 'Player':
