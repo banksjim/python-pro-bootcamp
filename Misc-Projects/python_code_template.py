@@ -20,7 +20,8 @@ class AppOrServiceName:
         # Clear terminal screen if used
         clear_terminal()
 
-        
+        # Main() logic
+                
         self.foo1() # Call foo() function
         self.bar2() # Call bar() function        
         
