@@ -42,8 +42,6 @@ class Guess_the_Number:
                     level == 'hard'):
                     
                     return HARD_LEVEL_TURNS               
-                
-        return None
 
     def end_game(self, correct_guess, guess_count, random_number): # Show final game results
         
