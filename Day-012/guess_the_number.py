@@ -4,12 +4,16 @@ import random
 from guess_the_number_banner import banner
 from shared_modules.system_modules import clear_terminal
 
+EASY_LEVEL_TURNS = 10
+HARD_LEVEL_TURNS = 5
+
 class Guess_the_Number:
-    
+   
     def __init__(self): # Initializer function
         return None
 
     def choose_difficulty(self): # User chooses difficulty level 'easy' or 'hard'
+                                 # Set max guesses
         
         # Initialize function variables
         level:            str = ''
@@ -24,44 +28,90 @@ class Guess_the_Number:
                level == 'e'    or
                level == 'hard' or
                level == 'h'):
+                
                 user_input_valid = True
-                   
-                if level == 'e':
-                    level = 'easy'
-                elif level == 'h':
-                    level = 'hard'
                 
                 print('Alright, let\'s go!\n')
+                   
+                if (level == 'e' or
+                    level == 'easy'):
+                   
+                    return EASY_LEVEL_TURNS
+                   
+                elif (level == 'h' or
+                    level == 'hard'):
                     
-                return level             
-        
-        return level
-
-    def set_guess_count(self, user_difficulty: str = ''): # Set max number of user guesses
-                                                          # based on difficulty selected earlier
-        
-        easy_level_max_guesses: int = 5
-        hard_level_max_guesses: int = 10
-        
-        # Set the max guesses based on the user_difficulty provided
-        if user_difficulty == 'easy':
-            return easy_level_max_guesses
-        elif user_difficulty == 'hard':
-            return hard_level_max_guesses
-        else:
-            print(f'ERROR: Invalid difficulty level passed to function: {user_difficulty}.')        
-        
+                    return HARD_LEVEL_TURNS               
+                
         return None
+
+    def end_game(self, correct_guess, guess_count, random_number): # Show final game results
+        
+        if correct_guess is True:
+            print(f'You got it in {guess_count} guesses! The answer was {random_number}.')  
+        else:
+            print(f'You lose. The correct number was {random_number}.')
+
+    def evaluate_guess(self, random_number, user_guess): # Test if the guess is
+                                                         # matching, high, or low
+        
+        # Initialize function variables
+        matching_guess: bool = False
+        
+        if user_guess == random_number:  
+
+            # Winner!
+            matching_guess = True                            
+
+        elif user_guess < random_number:
+            
+            # Too low
+            matching_guess = False
+            print('Too low.')
+
+        else:
+
+            # Too high
+            matching_guess = False
+            print('Too high.')
+        
+        return matching_guess
+
+    def guess_number(self): # Input user guess and validate it
+        
+        # Initialize function variables
+        user_guess_input: str = ''
+        valid_guess:      bool = False
+        
+        # Loop until valid guess is confirmed
+        while valid_guess is False:
+            
+            # User inputs their guess
+            user_guess_input = input('Make a guess: ')
+            
+            # Check that the user's guess is an integer
+            if user_guess_input.isdigit():
+                
+                # Check that the guess is between 1 and 100
+                if int(user_guess_input) in range(1, 101):
+                    
+                    # A guess in the correct range is returned by the function
+                    valid_guess = True
+                    return int(user_guess_input)
+                else:
+                    print('Guesses must be in the range of 1 to 100.')
+                
+            else:
+                print('Error: Input a valid integer number.')            
 
     def main(self): # Main app routine
 
         # Initialize main() variables
         correct_guess:    bool = False
-        difficulty_level: str = ''
         guess_count:      int = 0
         max_guesses:      int = 0
         random_number:    int = 0
-        user_guess:       str = ''
+        user_guess:       int = ''
 
         # Clear terminal screen and show banner
         clear_terminal()
@@ -71,10 +121,7 @@ class Guess_the_Number:
         # Main() logic  
         
         # User chooses difficulty level
-        difficulty_level = self.choose_difficulty()
-        
-        # Set maximum guess count based on difficulty level
-        max_guesses = self.set_guess_count(difficulty_level)
+        max_guesses = self.choose_difficulty()
         
         # Start game
         print('I\'m thinking of a number between 1 and 100.\n')
@@ -84,44 +131,23 @@ class Guess_the_Number:
         
         # Loop until number is guessed or run out of guesses
         while (correct_guess is False and
-               guess_count <= max_guesses):
+               guess_count < max_guesses):
             
             # Show user remaining guesses
             print(f'You have {max_guesses - guess_count} attempts remaining to guess the number.')           
             
-            # User inputs their guess (**Turn the lines below into a function that loops for a valid response**)
-            user_guess = input('Make a guess: ')
+            # Receive and validate the user's guess
+            user_guess = self.guess_number()
+            guess_count += 1
             
-            # Check that the user's guess is an integer
-            if user_guess.isdigit():
-                #stuff
-            else:
-                print('Please input a valid integer number.')
-            
-
+            # Evaluate the guess
+            correct_guess = self.evaluate_guess(random_number, user_guess)
+                
+        # Show final result       
+        self.end_game(correct_guess, guess_count, random_number)
+                
         return None
 
 if __name__ == '__main__':
     app = Guess_the_Number()
     app.main()
-
-
-
-
-
-
-
-# main() program logic module
-def main():
-
-    # initialize module variables   
-
-
-    # mainline statements
-    clear_terminal()
-    print(f'{banner}\n')
-
-    return None
-
-if __name__ == '__main__':
-    main()
