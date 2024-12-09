@@ -3,27 +3,33 @@
 
 import random
 
-from shared_modules.system_modules import clear_terminal
+from typing import Any, Optional
+
+from game_data import data
 from higher_lower_banners import app_banner
 from higher_lower_banners import vs_banner
-from game_data import data
+from shared_modules.system_modules import clear_terminal
 
 class HigherLower:
     
     # Declare constants here
     
-    def __init__(self): # Initializer function
+    # Initializer function
+    def __init__(self):
         # Declare global variables and constants here
         return None
 
-    def reset_screen(self): # Clear screen and print app banner
+    # Clear screen and print app banner
+    def reset_screen(self):
         clear_terminal()
         print(f'{app_banner}\n')
         return None
 
-    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = None): # Fetch a random entry from the data list
+     # Fetch a random entry from the data list
+    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = {}):        
+        
         # Initialize fetch_random_dict_entry() variables
-        random_data_dict_entry: dict[str, Any] = None
+        random_data_dict_entry: dict[str, Any] = {}
         
         # Retrieve a random game data dictionary entry
         random_data_dict_entry: dict[str, Any] = random.choice(data)
@@ -34,27 +40,49 @@ class HigherLower:
         
         return random_data_dict_entry
 
-    def main(self): # Main app routine
+    # Main app routine
+    def main(self):
 
         # Initialize main() variables
-        choice_A: dict[str, Any] = None
-        choice_B: dict[str, Any] = None
-        game_over:     bool = False
-        score:         int = 0
+        choice_A:  dict[str, Any] = {}
+        choice_B:  dict[str, Any] = {}
+        game_over: bool = False
+        score:     int = 0
 
-        # Main() logic
+        # Seed choice_A for round 1
+        choice_A = self.fetch_random_dict_entry()
+        
+        # Loop until player loses or decides to quit
         while game_over is False:
         
             # Clear terminal screen and print app banner
-            self.reset_screen()
+            self.reset_screen()           
 
             # Show current current score
+            if score > 0:
+                print(f'That\'s right! Your current score is: {score}.\n')
+                        
+            # Retrieve random values for choice_b
+            choice_B = self.fetch_random_dict_entry(choice_A)
             
-            # Set a random dictionary 
+            # Show current comparisons
+            print('Ready? Compare...\n')
+                       
+            if choice_A['country'] == 'United States':
+                print(f'A: {choice_A['name']}, a {choice_A['description']} from the '
+                      f'{choice_A['country']}.')
+            else:
+                print(f'A: {choice_A['name']}, a {choice_A['description']} from '
+                      f'{choice_A['country']}.')
             
-            # Retrieve dict and show current questions
-            choice_A = self.fetch_random_dict_entry()
-            print(f'Compare: {choice_A['name']}')
+            print(f'{vs_banner}')
+            
+            if choice_B['country'] == 'United States':
+                print(f'B: {choice_B['name']}, a {choice_B['description']} from the '
+                      f'{choice_B['country']}.')
+            else:
+                print(f'B: {choice_B['name']}, a {choice_B['description']} from '
+                      f'{choice_B['country']}.')
             
             # TEMP: Break loop       
             game_over = True     
