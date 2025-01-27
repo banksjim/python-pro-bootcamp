@@ -41,10 +41,11 @@ class HigherLower:
     def main(self):
 
         # Initialize main() variables
-        choice_A:  dict[str, Any] = {}
-        choice_B:  dict[str, Any] = {}
-        game_over: bool = False
-        score:     int = 0
+        choice_A:   dict[str, Any] = {}
+        choice_B:   dict[str, Any] = {}
+        game_over:  bool = False
+        user_guess: str = ""
+        score:      int = 0
 
         # Seed choice_A for round 1
         choice_A = self.fetch_random_dict_entry()
@@ -63,7 +64,7 @@ class HigherLower:
             choice_B = self.fetch_random_dict_entry(choice_A)
             
             # Show current comparisons
-            print('Ready? Compare...\n')
+            print('Ready? Compare or \'Q\' to quit...\n')
                        
             if (choice_A['country'] == 'United States') or \
                (choice_A['country'] == 'United Kingdom'):
@@ -82,6 +83,11 @@ class HigherLower:
             else:
                 print(f'B: {choice_B['name']}, a {choice_B['description']} from '
                       f'{choice_B['country']}.')
+           
+            # input user guess
+            user_guess = input('\n Who has the most followers (\'A\' or \'B\')? ').upper()
+            
+            
             
             # TEMP: Break loop       
             game_over = True     
