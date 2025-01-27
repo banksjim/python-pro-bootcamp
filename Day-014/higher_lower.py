@@ -30,12 +30,9 @@ class HigherLower:
         
         # Initialize fetch_random_dict_entry() variables
         random_data_dict_entry: dict[str, Any] = {}
-        
-        # Retrieve a random game data dictionary entry
-        random_data_dict_entry: dict[str, Any] = random.choice(data)
-        
-        # Ensure 
-        while random_data_dict_entry == previous_data_dict_entry:
+                
+        # Retrieve a random, but also unique, game data dictionary entry
+        while (random_data_dict_entry == previous_data_dict_entry) or (not random_data_dict_entry):
             random_data_dict_entry: dict[str, Any] = random.choice(data)
         
         return random_data_dict_entry
@@ -68,7 +65,8 @@ class HigherLower:
             # Show current comparisons
             print('Ready? Compare...\n')
                        
-            if choice_A['country'] == 'United States':
+            if (choice_A['country'] == 'United States') or \
+               (choice_A['country'] == 'United Kingdom'):
                 print(f'A: {choice_A['name']}, a {choice_A['description']} from the '
                       f'{choice_A['country']}.')
             else:
@@ -77,7 +75,8 @@ class HigherLower:
             
             print(f'{vs_banner}')
             
-            if choice_B['country'] == 'United States':
+            if (choice_B['country'] == 'United States') or \
+               (choice_B['country'] == 'United Kingdom'):
                 print(f'B: {choice_B['name']}, a {choice_B['description']} from the '
                       f'{choice_B['country']}.')
             else:
