@@ -56,6 +56,9 @@ class HigherLower:
             # Clear terminal screen and print app banner
             self.reset_screen()           
 
+            # Clear user's previous guess
+            user_guess = ''
+
             # Show current current score
             if score > 0:
                 print(f'That\'s right! Your current score is: {score}.\n')
@@ -84,11 +87,10 @@ class HigherLower:
                 print(f'B: {choice_B['name']}, a {choice_B['description']} from '
                       f'{choice_B['country']}.')
            
-            # input user guess
-            user_guess = input('\n Who has the most followers (\'A\' or \'B\')? ').upper()
-            
-            
-            
+            # input and validate user guess
+            while user_guess not in {'A', 'B', 'Q'}:
+                user_guess = input('\n--> Who has the most followers (\'A\' or \'B\')? ').upper()
+                        
             # TEMP: Break loop       
             game_over = True     
                     
