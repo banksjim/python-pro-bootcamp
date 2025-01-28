@@ -41,11 +41,13 @@ class HigherLower:
     def main(self):
 
         # Initialize main() variables
-        choice_A:   dict[str, Any] = {}
-        choice_B:   dict[str, Any] = {}
-        game_over:  bool = False
-        user_guess: str = ""
-        score:      int = 0
+        choice_A:       dict[str, Any] = {}
+        choice_B:       dict[str, Any] = {}
+        chosen_choice:  dict[str, Any] = {}
+        correct_choice: str = ''
+        game_over:      bool = False
+        user_guess:     str = ''
+        score:          int = 0
 
         # Seed choice_A for round 1
         choice_A = self.fetch_random_dict_entry()
@@ -90,9 +92,26 @@ class HigherLower:
             # input and validate user guess
             while user_guess not in {'A', 'B', 'Q'}:
                 user_guess = input('\n--> Who has the most followers (\'A\' or \'B\')? ').upper()
-                        
-            # TEMP: Break loop       
-            game_over = True     
+            
+            # Assess and determine the correct choice for highest followers
+            if int(choice_A['follower_count']) > int(choice_B['follower_count']):
+                correct_choice = 'A'
+            elif int(choice_A['follower_count']) == int(choice_B['follower_count']):
+                correct_choice = 'T' # Tie - Followers for each choice are equal
+            else:
+                correct_choice = 'B'         
+            
+            # Action the user's guess. Assess choice, handle tie, or quit early
+            if (user_guess == correct_choice) or (correct_choice == 'T'):
+                if correct_choice == 'T':
+                    print(f'\nBoth choices, {choice_A['follower_count']} million followers. '
+                          'Lucky win for you!')
+                else:
+                    chosen_choice = choice_A if user_guess == 'A' else choice_B
+                    print(f'\nGreat guess. Choice {user_guess} has '
+                          f'{chosen_choice["follower_count"]} million followers.')
+            else:
+                game_over = True # Quit game early
                     
         # Clear terminal screen and print app banner
         #self.reset_screen()
