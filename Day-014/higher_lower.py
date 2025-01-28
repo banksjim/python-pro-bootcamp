@@ -41,11 +41,12 @@ class HigherLower:
     def main(self):
 
         # Initialize main() variables
-        choice_A:   dict[str, Any] = {}
-        choice_B:   dict[str, Any] = {}
-        game_over:  bool = False
-        user_guess: str = ""
-        score:      int = 0
+        choice_A:       dict[str, Any] = {}
+        choice_B:       dict[str, Any] = {}
+        correct_choice: str = ""
+        game_over:      bool = False
+        user_guess:     str = ""
+        score:          int = 0
 
         # Seed choice_A for round 1
         choice_A = self.fetch_random_dict_entry()
@@ -90,7 +91,13 @@ class HigherLower:
             # input and validate user guess
             while user_guess not in {'A', 'B', 'Q'}:
                 user_guess = input('\n--> Who has the most followers (\'A\' or \'B\')? ').upper()
-                        
+            
+            # Assess and determine the correct choice for highest followers
+            if int(choice_A['follower_count']) > int(choice_B['follower_count']):
+                correct_choice = 'A'
+            else:
+                correct_choice = 'B'         
+                       
             # TEMP: Break loop       
             game_over = True     
                     
