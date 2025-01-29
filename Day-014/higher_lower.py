@@ -8,7 +8,7 @@ from typing import Any, Optional
 from game_data import data
 from higher_lower_banners import app_banner
 from higher_lower_banners import vs_banner
-from shared_modules.system_modules import clear_terminal
+from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
 class HigherLower:
     
@@ -122,6 +122,10 @@ class HigherLower:
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
                       f'{chosen_choice['follower_count']} million followers. You lose.')
+                
+            # Press any key to continue
+            if game_over is False:
+                press_any_key_to_continue()
                     
         # Clear terminal screen and print app banner
         #self.reset_screen()
