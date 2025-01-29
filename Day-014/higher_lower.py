@@ -118,6 +118,7 @@ class HigherLower:
                     print(f'\nGreat guess. Choice {user_guess} has '
                           f'{chosen_choice["follower_count"]} million followers.')
             else: # Incorrect guess
+                game_over = True
                 print(f'\nSorry. {unchosen_choice['name']} has '
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
