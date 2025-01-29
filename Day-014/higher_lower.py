@@ -8,7 +8,7 @@ from typing import Any, Optional
 from game_data import data
 from higher_lower_banners import app_banner
 from higher_lower_banners import vs_banner
-from shared_modules.system_modules import clear_terminal
+from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
 class HigherLower:
     
@@ -41,13 +41,14 @@ class HigherLower:
     def main(self):
 
         # Initialize main() variables
-        choice_A:       dict[str, Any] = {}
-        choice_B:       dict[str, Any] = {}
-        chosen_choice:  dict[str, Any] = {}
-        correct_choice: str = ''
-        game_over:      bool = False
-        user_guess:     str = ''
-        score:          int = 0
+        choice_A:         dict[str, Any] = {}
+        choice_B:         dict[str, Any] = {}
+        chosen_choice:    dict[str, Any] = {}
+        correct_choice:   str = ''
+        game_over:        bool = False
+        unchosen_choice:  dict[str, Any] = {}
+        user_guess:       str = ''
+        score:            int = 0
 
         # Seed choice_A for round 1
         choice_A = self.fetch_random_dict_entry()
@@ -89,9 +90,14 @@ class HigherLower:
                 print(f'B: {choice_B['name']}, a {choice_B['description']} from '
                       f'{choice_B['country']}.')
            
-            # input and validate user guess
+            # Input and validate user guess
             while user_guess not in {'A', 'B', 'Q'}:
                 user_guess = input('\n--> Who has the most followers (\'A\' or \'B\')? ').upper()
+            
+            # Assign chosen_choice and alternative_choice values
+            if user_guess in {'A', 'B'}:
+                chosen_choice = choice_A if user_guess == 'A' else choice_B
+                unchosen_choice = choice_B if user_guess == 'A' else choice_A            
             
             # Assess and determine the correct choice for highest followers
             if int(choice_A['follower_count']) > int(choice_B['follower_count']):
@@ -102,16 +108,25 @@ class HigherLower:
                 correct_choice = 'B'         
             
             # Action the user's guess. Assess choice, handle tie, or quit early
-            if (user_guess == correct_choice) or (correct_choice == 'T'):
+            if user_guess == 'Q':
+                game_over = True # Quit game early
+            elif (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie
                 if correct_choice == 'T':
                     print(f'\nBoth choices, {choice_A['follower_count']} million followers. '
                           'Lucky win for you!')
                 else:
-                    chosen_choice = choice_A if user_guess == 'A' else choice_B
                     print(f'\nGreat guess. Choice {user_guess} has '
                           f'{chosen_choice["follower_count"]} million followers.')
-            else:
-                game_over = True # Quit game early
+            else: # Incorrect guess
+                game_over = True
+                print(f'\nSorry. {unchosen_choice['name']} has '
+                      f'{unchosen_choice['follower_count']} million followers. '
+                      f'But {chosen_choice['name']} only has '
+                      f'{chosen_choice['follower_count']} million followers. You lose.')
+                
+            # Press any key to continue
+            if game_over is False:
+                press_any_key_to_continue()
                     
         # Clear terminal screen and print app banner
         #self.reset_screen()
