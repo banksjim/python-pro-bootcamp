@@ -5,5 +5,5 @@ disable=
     C0115, # missing-class-docstring
     C0116, # missing-function-docstring
     C0303, # trailing whitespace
-    CO401, # Unable to import
-    CO415  # Import outside toplevel
+    C0401, # Unable to import
+    C0415  # Import outside toplevel
