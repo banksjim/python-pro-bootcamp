@@ -115,8 +115,7 @@ class HigherLower:
                     print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
                           'Lucky win for you!')                  
                 else:
-                    print(f'\nGreat guess. Choice {user_guess} has '
-                          f'{chosen_choice["follower_count"]} million followers.')
+                    print(f'\nGreat guess!')
                 
                 # If the user guessed 'B' then assign choice B to choice A for next round
                 if user_guess == 'B':
