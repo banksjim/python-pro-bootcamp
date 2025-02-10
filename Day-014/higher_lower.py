@@ -26,8 +26,8 @@ class HigherLower:
         return None
 
      # Fetch a random entry from the data list
-    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = {}):        
-        
+    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = None):        
+               
         # Initialize fetch_random_dict_entry() variables
         random_data_dict_entry: dict[str, Any] = {}
                 
