@@ -8,26 +8,28 @@ from typing import Any, Optional
 from game_data import data
 from higher_lower_banners import app_banner
 from higher_lower_banners import vs_banner
-from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
+from shared_modules.system_modules import clear_terminal
 
 class HigherLower:
-    
-    # Declare constants here
-    
-    # Initializer function
+
     def __init__(self):
-        # Declare global variables and constants here
+        """Initializer function"""
+        
         return None
 
-    # Clear screen and print app banner
     def reset_screen(self):
+        """Clear screen and print app banner"""
+        
         clear_terminal()
         print(f'{app_banner}\n')
+        
         return None
 
-     # Fetch a random entry from the data list
-    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = {}):        
-        
+    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = None):  
+        """Fetch and return a random data dictionary entry from the data list. """ \
+        """Check for a duplicate selection when a previously fetched dictionary value """ \
+        """is optionally passed to the function."""
+               
         # Initialize fetch_random_dict_entry() variables
         random_data_dict_entry: dict[str, Any] = {}
                 
@@ -37,8 +39,8 @@ class HigherLower:
         
         return random_data_dict_entry
 
-    # Main app routine
     def main(self):
+        """Main app routine"""
 
         # Initialize main() variables
         choice_A:         dict[str, Any] = {}
@@ -59,12 +61,16 @@ class HigherLower:
             # Clear terminal screen and print app banner
             self.reset_screen()           
 
-            # Clear user's previous guess
-            user_guess = ''
-
             # Show current current score
             if score > 0:
-                print(f'That\'s right! Your current score is: {score}.\n')
+                if correct_choice == 'T':
+                    print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
+                          'Lucky win for you! Your current score is: {score}.\n')                  
+                else:
+                    print(f'That\'s right! Your current score is: {score}.\n')               
+
+            # Clear user's previous guess
+            user_guess = ''
                         
             # Retrieve random values for choice_b
             choice_B = self.fetch_random_dict_entry(choice_A)
@@ -107,31 +113,38 @@ class HigherLower:
             else:
                 correct_choice = 'B'         
             
-            # Action the user's guess. Assess choice, handle tie, or quit early
-            if user_guess == 'Q':
-                game_over = True # Quit game early
-            elif (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie
-                if correct_choice == 'T':
-                    print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
-                          'Lucky win for you!')
-                else:
-                    print(f'\nGreat guess. Choice {user_guess} has '
-                          f'{chosen_choice["follower_count"]} million followers.')
+            # Evaluate the user's guess. Assess choice, handle tie, or quit early
+            if (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie                               
+                
+                # If the user guessed 'B' then assign choice B to choice A for next round
+                if user_guess == 'B':
+                    choice_A = choice_B
+               
+                # Increase score by 1
+                score += 1         
+
+            elif user_guess == 'Q': # Quit game early
+                game_over = True 
+
+                # Clear terminal screen and print app banner
+                self.reset_screen()  
+
+                # Show final score
+                print(f'Final score: {score}')
+            
             else: # Incorrect guess
                 game_over = True
-                print(f'\nSorry. {unchosen_choice['name']} has '
+                
+                # Clear terminal screen and print app banner
+                self.reset_screen()  
+                
+                print(f'Sorry. {unchosen_choice['name']} has '
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
-                      f'{chosen_choice['follower_count']} million followers. You lose.')
-                
-            # Press any key to continue
-            if game_over is False:
-                press_any_key_to_continue()
-                    
-        # Clear terminal screen and print app banner
-        #self.reset_screen()
-        
-        # Show final score         
+                      f'{chosen_choice['follower_count']} million followers. You lose.')            
+
+                # Show final score
+                print(f'Final score: {score}')              
 
         return None
 
