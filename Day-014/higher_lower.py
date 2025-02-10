@@ -134,6 +134,7 @@ class HigherLower:
                 
             # Press any key to continue
             if game_over is False:
+                print(f'Final score: {score}')
                 press_any_key_to_continue()
                     
         # Clear terminal screen and print app banner
