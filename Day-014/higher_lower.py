@@ -121,6 +121,9 @@ class HigherLower:
                 # If the user guessed 'B' then assign choice B to choice A for next round
                 if user_guess == 'B':
                     choice_A = choice_B
+               
+                # Increase score by 1
+                score += 1
                 
             else: # Incorrect guess
                 game_over = True
