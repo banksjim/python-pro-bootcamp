@@ -108,16 +108,7 @@ class HigherLower:
                 correct_choice = 'B'         
             
             # Evaluate the user's guess. Assess choice, handle tie, or quit early
-            if user_guess == 'Q':
-                game_over = True # Quit game early
-
-                # Clear terminal screen and print app banner
-                self.reset_screen()  
-
-                # Show final score
-                print(f'Final score: {score}')
-
-            elif (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie                               
+            if (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie                               
                 if correct_choice == 'T':
                     print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
                           'Lucky win for you!')                  
@@ -129,8 +120,17 @@ class HigherLower:
                     choice_A = choice_B
                
                 # Increase score by 1
-                score += 1
-                
+                score += 1         
+
+            elif user_guess == 'Q': # Quit game early
+                game_over = True 
+
+                # Clear terminal screen and print app banner
+                self.reset_screen()  
+
+                # Show final score
+                print(f'Final score: {score}')
+            
             else: # Incorrect guess
                 game_over = True
                 
@@ -140,7 +140,7 @@ class HigherLower:
                 print(f'Sorry. {unchosen_choice['name']} has '
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
-                      f'{chosen_choice['follower_count']} million followers. You lose.')
+                      f'{chosen_choice['follower_count']} million followers. You lose.')            
 
                 # Show final score
                 print(f'Final score: {score}')
