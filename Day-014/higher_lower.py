@@ -11,22 +11,24 @@ from higher_lower_banners import vs_banner
 from shared_modules.system_modules import clear_terminal
 
 class HigherLower:
-    
-    # Declare constants here
-    
-    # Initializer function
+
     def __init__(self):
-        # Declare global variables and constants here
+        """Initializer function"""
+        
         return None
 
-    # Clear screen and print app banner
     def reset_screen(self):
+        """Clear screen and print app banner"""
+        
         clear_terminal()
         print(f'{app_banner}\n')
+        
         return None
 
-     # Fetch a random entry from the data list
-    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = None):        
+    def fetch_random_dict_entry(self, previous_data_dict_entry: Optional[dict[str, Any]] = None):  
+        """Fetch and return a random data dictionary entry from the data list. """ \
+        """Check for a duplicate selection when a previously fetched dictionary value """ \
+        """is optionally passed to the function."""
                
         # Initialize fetch_random_dict_entry() variables
         random_data_dict_entry: dict[str, Any] = {}
@@ -37,8 +39,8 @@ class HigherLower:
         
         return random_data_dict_entry
 
-    # Main app routine
     def main(self):
+        """Main app routine"""
 
         # Initialize main() variables
         choice_A:         dict[str, Any] = {}
