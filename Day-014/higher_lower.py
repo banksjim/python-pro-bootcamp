@@ -137,7 +137,7 @@ class HigherLower:
                 # Clear terminal screen and print app banner
                 self.reset_screen()  
                 
-                print(f'\nSorry. {unchosen_choice['name']} has '
+                print(f'Sorry. {unchosen_choice['name']} has '
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
                       f'{chosen_choice['follower_count']} million followers. You lose.')
