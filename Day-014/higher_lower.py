@@ -131,16 +131,13 @@ class HigherLower:
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
                       f'{chosen_choice['follower_count']} million followers. You lose.')
-                
+
+                # Show final score
+                print(f'Final score: {score}')
+
             # Press any key to continue
             if game_over is False:
-                press_any_key_to_continue()
-                    
-        # Clear terminal screen and print app banner
-        self.reset_screen()
-                
-        # Show final score
-        print(f'Final score: {score}')
+                press_any_key_to_continue()                    
 
         return None
 
