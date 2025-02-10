@@ -64,7 +64,7 @@ class HigherLower:
 
             # Show current current score
             if score > 0:
-                print(f'That\'s right! Your current score is: {score}.\n')
+                print(f'Your current score is: {score}.\n')
                         
             # Retrieve random values for choice_b
             choice_B = self.fetch_random_dict_entry(choice_A)
