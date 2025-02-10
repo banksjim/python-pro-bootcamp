@@ -110,12 +110,19 @@ class HigherLower:
             # Evaluate the user's guess. Assess choice, handle tie, or quit early
             if user_guess == 'Q':
                 game_over = True # Quit game early
+
+                # Clear terminal screen and print app banner
+                self.reset_screen()  
+
+                # Show final score
+                print(f'Final score: {score}')
+
             elif (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie                               
                 if correct_choice == 'T':
                     print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
                           'Lucky win for you!')                  
                 else:
-                    print(f'\nGreat guess!')
+                    print('\nGreat guess!')
                 
                 # If the user guessed 'B' then assign choice B to choice A for next round
                 if user_guess == 'B':
@@ -126,6 +133,10 @@ class HigherLower:
                 
             else: # Incorrect guess
                 game_over = True
+                
+                # Clear terminal screen and print app banner
+                self.reset_screen()  
+                
                 print(f'\nSorry. {unchosen_choice['name']} has '
                       f'{unchosen_choice['follower_count']} million followers. '
                       f'But {chosen_choice['name']} only has '
