@@ -112,7 +112,7 @@ class HigherLower:
                 game_over = True # Quit game early
             elif (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie
                 if correct_choice == 'T':
-                    print(f'\nBoth choices, {choice_A['follower_count']} million followers. '
+                    print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
                           'Lucky win for you!')
                 else:
                     print(f'\nGreat guess. Choice {user_guess} has '
