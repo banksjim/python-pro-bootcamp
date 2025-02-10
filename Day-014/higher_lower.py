@@ -8,7 +8,7 @@ from typing import Any, Optional
 from game_data import data
 from higher_lower_banners import app_banner
 from higher_lower_banners import vs_banner
-from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
+from shared_modules.system_modules import clear_terminal
 
 class HigherLower:
     
@@ -59,12 +59,16 @@ class HigherLower:
             # Clear terminal screen and print app banner
             self.reset_screen()           
 
-            # Clear user's previous guess
-            user_guess = ''
-
             # Show current current score
             if score > 0:
-                print(f'Your current score is: {score}.\n')
+                if correct_choice == 'T':
+                    print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
+                          'Lucky win for you! Your current score is: {score}.\n')                  
+                else:
+                    print(f'That\'s right! Your current score is: {score}.\n')               
+
+            # Clear user's previous guess
+            user_guess = ''
                         
             # Retrieve random values for choice_b
             choice_B = self.fetch_random_dict_entry(choice_A)
@@ -109,11 +113,6 @@ class HigherLower:
             
             # Evaluate the user's guess. Assess choice, handle tie, or quit early
             if (user_guess == correct_choice) or (correct_choice == 'T'): # Correct guess or tie                               
-                if correct_choice == 'T':
-                    print(f'\nBoth choices had {choice_A['follower_count']} million followers. '
-                          'Lucky win for you!')                  
-                else:
-                    print('\nGreat guess!')
                 
                 # If the user guessed 'B' then assign choice B to choice A for next round
                 if user_guess == 'B':
@@ -143,11 +142,7 @@ class HigherLower:
                       f'{chosen_choice['follower_count']} million followers. You lose.')            
 
                 # Show final score
-                print(f'Final score: {score}')
-
-            # Press any key to continue
-            if game_over is False:
-                press_any_key_to_continue()                    
+                print(f'Final score: {score}')              
 
         return None
 
