@@ -10,7 +10,8 @@ class coffee_machine:
         # Declare global variables and constants here
         return None
 
-    def foo1(self): # First function template
+    def report_resources(self):
+        """On-demand output of current remaining machine resources"""
         return None
 
     def bar2(self): # Second function template
@@ -19,14 +20,17 @@ class coffee_machine:
     def main(self): # Main app routine
 
         # Initialize main() variables
-
-        # Clear terminal screen if used
-        clear_terminal()
-
+        controlled_power_down: bool = False
+        
         # Main() logic
+        while controlled_power_down is False: # Continuously operate while power is on
+        
+            # Clear terminal screen if used
+            clear_terminal()
+        
 
-        self.foo1() # Call foo() function
-        self.bar2() # Call bar() function
+            # self.report_resources() # Output remaining machine resources
+            self.bar2() # Call bar() function
 
         return None
 
