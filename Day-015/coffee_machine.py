@@ -43,11 +43,7 @@ class coffee_machine:
             print('  5. Power down\n')
             
             # Request and validate next action
-            action = self.valid_user_action()
-        
-
-            # self.report_resources() # Output remaining machine resources
-            self.bar2() # Call bar() function
+            action = self.valid_user_action()      
 
         return None
 
