@@ -14,12 +14,18 @@ class coffee_machine:
         """On-demand output of current remaining machine resources"""
         return None
 
-    def bar2(self): # Second function template
-        return None
+    def valid_user_action(self):
+        """Accept and valid requested user action. Return a valid action option."""
+        
+        # Initialize valid_user_action() variables
+        user_action: int = 0
+        
+        return user_action
 
     def main(self): # Main app routine
 
         # Initialize main() variables
+        action:                int = 0
         controlled_power_down: bool = False
         
         # Main() logic
@@ -27,6 +33,17 @@ class coffee_machine:
         
             # Clear terminal screen if used
             clear_terminal()
+        
+            # Show user options
+            print('Available options:\n')
+            print('  1. Order espresso')
+            print('  2. Order latte')
+            print('  3. Order cappuccino')
+            print('  4. Print machine report')
+            print('  5. Power down\n')
+            
+            # Request and validate next action
+            action = self.valid_user_action()
         
 
             # self.report_resources() # Output remaining machine resources
