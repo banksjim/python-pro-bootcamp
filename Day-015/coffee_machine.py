@@ -18,21 +18,20 @@ class coffee_machine:
         """Accept and valid requested user action. Return a valid action option."""
         
         # Initialize valid_user_action() variables
-        user_action: int = 0
+        valid_selection:        bool = False
+        requested_action:       str = ''
+        requested_action_error: str = ''
+        validated_action:       int = 0
         
-        return user_action
-
-    def main(self): # Main app routine
-
-        # Initialize main() variables
-        action:                int = 0
-        controlled_power_down: bool = False
-        
-        # Main() logic
-        while controlled_power_down is False: # Continuously operate while power is on
+        while valid_selection is False: # Loop until a valid user action is input
         
             # Clear terminal screen if used
-            clear_terminal()
+            clear_terminal()  
+            
+            # Show requested action error if present then clear it
+            if requested_action_error is not '':
+                print(f'{requested_action_error}\n')
+                requested_action_error = ''                           
         
             # Show user options
             print('Available options:\n')
@@ -42,7 +41,35 @@ class coffee_machine:
             print('  4. Print machine report')
             print('  5. Power down\n')
             
-            # Request and validate next action
+            # Retrieve next action from terminal
+            requested_action = input('Section: ')
+            
+            # Validate that requested action is numeric
+            if requested_action.isdigit():
+                
+                # validate that requested action is in the valid range
+                if int(requested_action) in range(1, 6):
+                    valid_selection = True
+                else:
+                    requested_action_error = 'Error: Request not in valid range'
+                    valid_selection = False
+                
+            else:
+                requested_action_error = 'Error: Request must be numeric'
+                valid_selection = False
+            
+        return validated_action
+
+    def main(self): # Main app routine
+
+        # Initialize main() variables
+        action:                int = 0
+        controlled_power_down: bool = False
+        
+        # Main() logic
+        while controlled_power_down is False: # Continuously operate while power is on      
+            
+            # Retrieve next action
             action = self.valid_user_action()      
 
         return None
