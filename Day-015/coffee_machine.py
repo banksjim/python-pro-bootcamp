@@ -96,7 +96,7 @@ class coffee_machine:
                     
                 # Handle machine report request
                 case 5:
-                    report_resources()                  
+                    self.report_resources()                  
                     
                 # Handle controlled power down
                 case 6:
