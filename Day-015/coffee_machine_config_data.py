@@ -28,5 +28,6 @@ menu = {
 resources = {
     'water': 300,
     'coffee': 200,
-    'milk': 100       
+    'milk': 100,
+    'currency_bin': 10.00
 }
