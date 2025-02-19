@@ -13,10 +13,17 @@ class coffee_machine:
     def report_resources(self):
         """On-demand output of current remaining machine resources"""
         
-        print('\nResource report:')
+        # Output resource report header
+        print('\nResource report')
+        print('-------------------')
                     
         # Output current resources from config data
-        print(f'Water: {resources["water"]} ml')
+        print(f'Water:    {resources["water"]} ml')
+        print(f'Milk:     {resources["milk"]} ml')
+        print(f'Coffee:   {resources["coffee"]} g')
+        print('-------------------')
+        print(f'Cash bin: ${resources["currency_bin"]:0.2f}')
+        print('-------------------')
                     
         # Press any key to continue
         press_any_key_to_continue()
