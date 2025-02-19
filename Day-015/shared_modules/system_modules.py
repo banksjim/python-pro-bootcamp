@@ -23,7 +23,7 @@ def clear_terminal():
 
 # Press any key to continue
 def press_any_key_to_continue():
-    print("Press any key to continue...")
+    print("\nPress any key to continue...")
     if os.name == 'nt':  # For Windows
         import msvcrt
         msvcrt.getch()

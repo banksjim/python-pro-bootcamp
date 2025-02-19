@@ -1,6 +1,5 @@
 # Coffee machine - Simulation of the software required to operate a coffee dispenser machine
-
-from shared_modules.system_modules import clear_terminal
+from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
 class coffee_machine:
 
@@ -8,7 +7,7 @@ class coffee_machine:
 
     def __init__(self): # Initializer function
         # Declare global variables and constants here
-        return None
+        return None       
 
     def report_resources(self):
         """On-demand output of current remaining machine resources"""
@@ -75,7 +74,10 @@ class coffee_machine:
                         
                     # Handle machine report request
                     case 5:
-                        print('') # placeholder statement
+                        print('\nResource report:')
+                        
+                        # Press any key to continue
+                        press_any_key_to_continue()                       
                         
                     # Handle controlled power down
                     case 6:
