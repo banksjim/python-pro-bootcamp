@@ -1,4 +1,5 @@
 # Coffee machine - Simulation of the software required to operate a coffee dispenser machine
+from coffee_machine_config_data import menu, resources
 from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
 class coffee_machine:
@@ -57,31 +58,7 @@ class coffee_machine:
                 
             else:
                 requested_action_error = 'Error: Request must be numeric'
-                valid_selection = False
-                
-            # Process machine request options
-            if valid_selection is True:
-                
-                match validated_action:
-                    
-                    # Handle drink order request
-                    case 1 | 2 | 3:
-                        print('') # placeholder statement
-                    
-                    # Handle refund change request
-                    case 4:
-                        print('') # placeholder statement
-                        
-                    # Handle machine report request
-                    case 5:
-                        print('\nResource report:')
-                        
-                        # Press any key to continue
-                        press_any_key_to_continue()                       
-                        
-                    # Handle controlled power down
-                    case 6:
-                        print('') # placeholder statement               
+                valid_selection = False          
             
         return validated_action
 
@@ -96,6 +73,31 @@ class coffee_machine:
             
             # Retrieve next action
             action = self.valid_user_action()      
+            
+            # Process machine request options               
+            match action:
+                
+                # Handle drink order request
+                case 1 | 2 | 3:
+                    print('') # placeholder statement
+                
+                # Handle refund change request
+                case 4:
+                    print('') # placeholder statement
+                    
+                # Handle machine report request
+                case 5:
+                    print('\nResource report:')
+                    
+                    # Output current resources from config data
+                    print(f'Water: {resources["water"]} ml')
+                    
+                    # Press any key to continue
+                    press_any_key_to_continue()                       
+                    
+                # Handle controlled power down
+                case 6:
+                    print('') # placeholder statement    
 
         return None
 
