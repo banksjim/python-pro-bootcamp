@@ -49,7 +49,8 @@ class coffee_machine:
             if requested_action.isdigit():
                 
                 # validate that requested action is in the valid range
-                if int(requested_action) in range(1, 6):
+                if int(requested_action) in range(1, 7):
+                    validated_action = int(requested_action)
                     valid_selection = True
                 else:
                     requested_action_error = 'Error: Request not in valid range'
@@ -58,6 +59,27 @@ class coffee_machine:
             else:
                 requested_action_error = 'Error: Request must be numeric'
                 valid_selection = False
+                
+            # Process machine request options
+            if valid_selection is True:
+                
+                match validated_action:
+                    
+                    # Handle drink order request
+                    case 1 | 2 | 3:
+                        print('') # placeholder statement
+                    
+                    # Handle refund change request
+                    case 4:
+                        print('') # placeholder statement
+                        
+                    # Handle machine report request
+                    case 5:
+                        print('') # placeholder statement
+                        
+                    # Handle controlled power down
+                    case 6:
+                        print('') # placeholder statement               
             
         return validated_action
 
