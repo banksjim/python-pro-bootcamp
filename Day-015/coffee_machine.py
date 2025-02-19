@@ -12,6 +12,15 @@ class coffee_machine:
 
     def report_resources(self):
         """On-demand output of current remaining machine resources"""
+        
+        print('\nResource report:')
+                    
+        # Output current resources from config data
+        print(f'Water: {resources["water"]} ml')
+                    
+        # Press any key to continue
+        press_any_key_to_continue()
+        
         return None
 
     def valid_user_action(self):
@@ -87,13 +96,7 @@ class coffee_machine:
                     
                 # Handle machine report request
                 case 5:
-                    print('\nResource report:')
-                    
-                    # Output current resources from config data
-                    print(f'Water: {resources["water"]} ml')
-                    
-                    # Press any key to continue
-                    press_any_key_to_continue()                       
+                    report_resources()                  
                     
                 # Handle controlled power down
                 case 6:
