@@ -30,6 +30,32 @@ class coffee_machine:
         
         return None
 
+    def confirm_shutdown(self):
+        """Perform controlled shutdown"""
+        
+        # Initialize confirm_shutdown() variables
+        confirmation_action:        str = ''
+        shutdown_action:            bool = False
+        valid_confirmation_request: bool = False
+        
+        # Loop until valid shutdown confirmation is provided
+        while valid_confirmation_request is False:
+            
+            # Prompt for shutdown confirmation
+            confirmation_action = input('\nConfirm shutdown (Y/N)? ').upper()
+            
+            # Validate shutdown confirmation
+            if confirmation_action == 'Y':
+                shutdown_action = True
+                valid_confirmation_request = True
+            elif confirmation_action == 'N':
+                shutdown_action = False
+                valid_confirmation_request = True                
+            else:
+                valid_confirmation_request = False           
+        
+        return shutdown_action
+
     def valid_user_action(self):
         """Accept and valid requested user action. Return a valid action option."""
         
@@ -81,8 +107,8 @@ class coffee_machine:
     def main(self): # Main app routine
 
         # Initialize main() variables
-        action:                int = 0
-        controlled_power_down: bool = False
+        action:                    int = 0
+        controlled_power_down:     bool = False
         
         # Main() logic
         while controlled_power_down is False: # Continuously operate while power is on      
@@ -107,7 +133,7 @@ class coffee_machine:
                     
                 # Handle controlled power down
                 case 6:
-                    print('') # placeholder statement    
+                    controlled_power_down = self.confirm_shutdown()                    
 
         return None
 
