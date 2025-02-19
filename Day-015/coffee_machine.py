@@ -38,11 +38,12 @@ class coffee_machine:
             print('  1. Order espresso')
             print('  2. Order latte')
             print('  3. Order cappuccino')
-            print('  4. Print machine report')
-            print('  5. Power down\n')
+            print('  4. Refund change')
+            print('  5. Print machine report')
+            print('  6. Power down\n')
             
             # Retrieve next action from terminal
-            requested_action = input('Section: ')
+            requested_action = input('Selection: ')
             
             # Validate that requested action is numeric
             if requested_action.isdigit():
