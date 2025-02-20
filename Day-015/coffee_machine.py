@@ -56,9 +56,13 @@ class coffee_machine:
         
         return shutdown_action
 
-    def display_machine_options(self, menu_selection_error: str = ''):
+    def display_machine_options(self, menu_selection_error: str = '', \
+                                read_only: bool = False, \
+                                validated_menu_action: int = 0):
         """Display the current menu selections and error if present. """ \
-        """Return the user's menu selection value for validation."""
+        """Return the user's menu selection value for validation.""" \
+        """Also support optional parameters to display the menu again read-only """ \
+        """and with any previous error cleared showing the user's validated selection."""
 
         # Initialize display_machine_options() variables
         menu_selection: str = ''
@@ -79,8 +83,12 @@ class coffee_machine:
         print('  5. Print machine report')
         print('  6. Power down\n')
         
-        # Retrieve next action from terminal
-        menu_selection = input('Selection: ')
+        # Retrieve next action from user, or display user's validated selection
+        if read_only is False:
+            menu_selection = input('Selection: ')
+        else:
+            print(f'Selection: {validated_menu_action}')
+            menu_selection = ''
     
         return menu_selection
 
@@ -129,7 +137,10 @@ class coffee_machine:
         while controlled_power_down is False: # Continuously operate while power is on      
             
             # Retrieve next action
-            action = self.validate_user_action()      
+            action = self.validate_user_action()     
+            
+            # Redisplay the menu screen read-only and clear any previous errors 
+            self.display_machine_options('', True, action)
             
             # Process machine request options               
             match action:
