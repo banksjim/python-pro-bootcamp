@@ -56,6 +56,10 @@ class coffee_machine:
         
         return shutdown_action
 
+    def display_machine_options(self, error_message: str = ''):
+    
+        return None
+
     def valid_user_action(self):
         """Accept and valid requested user action. Return a valid action option."""
         
@@ -66,6 +70,9 @@ class coffee_machine:
         validated_action:       int = 0
         
         while valid_selection is False: # Loop until a valid user action is input
+        
+            # Display available coffee machine options
+            self.display_machine_options(requested_action_error)
         
             # Clear terminal screen if used
             clear_terminal()  
