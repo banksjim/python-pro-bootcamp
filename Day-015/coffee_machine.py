@@ -48,6 +48,7 @@ class coffee_machine:
             if confirmation_action == 'Y':
                 shutdown_action = True
                 valid_confirmation_request = True
+                print('Shutdown successful...\n')
             elif confirmation_action == 'N':
                 shutdown_action = False
                 valid_confirmation_request = True                
@@ -56,8 +57,45 @@ class coffee_machine:
         
         return shutdown_action
 
-    def valid_user_action(self):
-        """Accept and valid requested user action. Return a valid action option."""
+    def display_machine_options(self, menu_selection_error: str = '', \
+                                read_only: bool = False, \
+                                validated_menu_action: int = 0):
+        """Display the current menu selections and error if present. """ \
+        """Return the user's menu selection value for validation.""" \
+        """Also support optional parameters to display the menu again read-only """ \
+        """and with any previous error cleared showing the user's validated selection."""
+
+        # Initialize display_machine_options() variables
+        menu_selection: str = ''
+        
+        # Clear terminal screen if used
+        clear_terminal()  
+        
+        # Show requested action error if present then clear it
+        if menu_selection_error is not '':
+            print(f'{menu_selection_error}\n')                       
+    
+        # Show user options
+        print('Available options:\n')
+        print('  1. Order espresso')
+        print('  2. Order latte')
+        print('  3. Order cappuccino')
+        print('  4. Refund change')
+        print('  5. Print machine report')
+        print('  6. Power down\n')
+        
+        # Retrieve next action from user, or display user's validated selection
+        if read_only is False:
+            menu_selection = input('Selection: ')
+        else:
+            print(f'Selection: {validated_menu_action}')
+            menu_selection = ''
+    
+        return menu_selection
+
+    def validate_user_action(self):
+        """Accept and valid requested user action. """ \
+        """Return a valid action option."""
         
         # Initialize valid_user_action() variables
         valid_selection:        bool = False
@@ -67,26 +105,12 @@ class coffee_machine:
         
         while valid_selection is False: # Loop until a valid user action is input
         
-            # Clear terminal screen if used
-            clear_terminal()  
+            # Display available coffee machine options
+            requested_action = self.display_machine_options(requested_action_error)
             
-            # Show requested action error if present then clear it
-            if requested_action_error is not '':
-                print(f'{requested_action_error}\n')
-                requested_action_error = ''                           
-        
-            # Show user options
-            print('Available options:\n')
-            print('  1. Order espresso')
-            print('  2. Order latte')
-            print('  3. Order cappuccino')
-            print('  4. Refund change')
-            print('  5. Print machine report')
-            print('  6. Power down\n')
-            
-            # Retrieve next action from terminal
-            requested_action = input('Selection: ')
-            
+            # Clear any previous error message
+            requested_action_error = ''
+                   
             # Validate that requested action is numeric
             if requested_action.isdigit():
                 
@@ -114,7 +138,10 @@ class coffee_machine:
         while controlled_power_down is False: # Continuously operate while power is on      
             
             # Retrieve next action
-            action = self.valid_user_action()      
+            action = self.validate_user_action()     
+            
+            # Redisplay the menu screen read-only and clear any previous errors 
+            self.display_machine_options('', True, action)
             
             # Process machine request options               
             match action:
