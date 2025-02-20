@@ -60,7 +60,7 @@ class coffee_machine:
     
         return None
 
-    def valid_user_action(self):
+    def validate_user_action(self):
         """Accept and valid requested user action. Return a valid action option."""
         
         # Initialize valid_user_action() variables
@@ -121,7 +121,7 @@ class coffee_machine:
         while controlled_power_down is False: # Continuously operate while power is on      
             
             # Retrieve next action
-            action = self.valid_user_action()      
+            action = self.validate_user_action()      
             
             # Process machine request options               
             match action:
