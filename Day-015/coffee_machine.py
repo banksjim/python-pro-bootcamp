@@ -56,12 +56,37 @@ class coffee_machine:
         
         return shutdown_action
 
-    def display_machine_options(self, error_message: str = ''):
+    def display_machine_options(self, menu_selection_error: str = ''):
+        """Display the current menu selections and error if present. """ \
+        """Return the user's menu selection value for validation."""
+
+        # Initialize display_machine_options() variables
+        menu_selection: str = ''
+        
+        # Clear terminal screen if used
+        clear_terminal()  
+        
+        # Show requested action error if present then clear it
+        if menu_selection_error is not '':
+            print(f'{menu_selection_error}\n')                       
     
-        return None
+        # Show user options
+        print('Available options:\n')
+        print('  1. Order espresso')
+        print('  2. Order latte')
+        print('  3. Order cappuccino')
+        print('  4. Refund change')
+        print('  5. Print machine report')
+        print('  6. Power down\n')
+        
+        # Retrieve next action from terminal
+        menu_selection = input('Selection: ')
+    
+        return menu_selection
 
     def validate_user_action(self):
-        """Accept and valid requested user action. Return a valid action option."""
+        """Accept and valid requested user action. """ \
+        """Return a valid action option."""
         
         # Initialize valid_user_action() variables
         valid_selection:        bool = False
@@ -72,28 +97,11 @@ class coffee_machine:
         while valid_selection is False: # Loop until a valid user action is input
         
             # Display available coffee machine options
-            self.display_machine_options(requested_action_error)
-        
-            # Clear terminal screen if used
-            clear_terminal()  
+            requested_action = self.display_machine_options(requested_action_error)
             
-            # Show requested action error if present then clear it
-            if requested_action_error is not '':
-                print(f'{requested_action_error}\n')
-                requested_action_error = ''                           
-        
-            # Show user options
-            print('Available options:\n')
-            print('  1. Order espresso')
-            print('  2. Order latte')
-            print('  3. Order cappuccino')
-            print('  4. Refund change')
-            print('  5. Print machine report')
-            print('  6. Power down\n')
-            
-            # Retrieve next action from terminal
-            requested_action = input('Selection: ')
-            
+            # Clear any previous error message
+            requested_action_error = ''
+                   
             # Validate that requested action is numeric
             if requested_action.isdigit():
                 
