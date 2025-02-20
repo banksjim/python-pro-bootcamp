@@ -48,6 +48,7 @@ class coffee_machine:
             if confirmation_action == 'Y':
                 shutdown_action = True
                 valid_confirmation_request = True
+                print('Shutdown successful...\n')
             elif confirmation_action == 'N':
                 shutdown_action = False
                 valid_confirmation_request = True                
