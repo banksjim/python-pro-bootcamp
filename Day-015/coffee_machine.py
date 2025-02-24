@@ -1,4 +1,5 @@
 # Coffee machine - Simulation of the software required to operate a coffee dispenser machine
+
 from coffee_machine_config_data import menu, resources
 from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
@@ -13,6 +14,9 @@ class coffee_machine:
     def report_resources(self):
         """On-demand output of current remaining machine resources"""
         
+        # Initialize report_resources() variables
+        cash_bin_total: float = 0.00
+        
         # Output resource report header
         print('\nResource report')
         print('-------------------')
@@ -22,7 +26,11 @@ class coffee_machine:
         print(f'Milk:     {resources["milk"]} ml')
         print(f'Coffee:   {resources["coffee"]} g')
         print('-------------------')
-        print(f'Cash bin: ${resources["currency_bin"]:0.2f}')
+        print(f'Cash bin: ${cash_bin_total:0.2f}')
+        print(f'{resources["quarters"]:>3} - Quarters')
+        print(f'{resources["dimes"]:>3} - Dimes')
+        print(f'{resources["nickels"]:>3} - Nickels')
+        print(f'{resources["pennies"]:>3} - Pennies')
         print('-------------------')
                     
         # Press any key to continue
@@ -72,7 +80,7 @@ class coffee_machine:
         clear_terminal()  
         
         # Show requested action error if present then clear it
-        if menu_selection_error is not '':
+        if menu_selection_error != '':
             print(f'{menu_selection_error}\n')                       
     
         # Show user options
