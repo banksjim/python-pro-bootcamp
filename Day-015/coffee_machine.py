@@ -27,10 +27,10 @@ class coffee_machine:
         print(f'Coffee:   {resources["coffee"]} g')
         print('-------------------')
         print(f'Cash bin: ${cash_bin_total:0.2f}')
-        print(f'{resources["quarters"]:>3} - Quarters')
-        print(f'{resources["dimes"]:>3} - Dimes')
-        print(f'{resources["nickels"]:>3} - Nickels')
-        print(f'{resources["pennies"]:>3} - Pennies')
+        print(f'{resources["USD_quarters"]:>3} - Quarters')
+        print(f'{resources["USD_dimes"]:>3} - Dimes')
+        print(f'{resources["USD_nickels"]:>3} - Nickels')
+        print(f'{resources["USD_pennies"]:>3} - Pennies')
         print('-------------------')
                     
         # Press any key to continue

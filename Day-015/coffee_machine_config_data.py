@@ -29,8 +29,12 @@ resources = {
     'water': 300,
     'coffee': 200,
     'milk': 100,
-    'quarters': 12,
-    'dimes': 40,
-    'nickels': 50,
-    'pennies': 50
+    'USD_quarters': 12,
+    'USD_quarters_value': 0.25,
+    'USD_dimes': 40,
+    'USD_dimes_value': 0.10,
+    'USD_nickels': 50,
+    'USD_nickels_value': 0.05,
+    'USD_pennies': 50,
+    'USD_pennies_value': 0.01
 }
