@@ -9,34 +9,7 @@ class coffee_machine:
 
     def __init__(self): # Initializer function
         # Declare global variables and constants here
-        return None       
-
-    def report_resources(self):
-        """On-demand output of current remaining machine resources"""
-        
-        # Initialize report_resources() variables
-        cash_bin_total: float = 0.00
-        
-        # Output resource report header
-        print('\nResource report')
-        print('-------------------')
-                    
-        # Output current resources from config data
-        print(f'Water:    {resources["water"]} ml')
-        print(f'Milk:     {resources["milk"]} ml')
-        print(f'Coffee:   {resources["coffee"]} g')
-        print('-------------------')
-        print(f'Cash bin: ${cash_bin_total:0.2f}')
-        print(f'{resources["USD_quarters"]:>3} - Quarters')
-        print(f'{resources["USD_dimes"]:>3} - Dimes')
-        print(f'{resources["USD_nickels"]:>3} - Nickels')
-        print(f'{resources["USD_pennies"]:>3} - Pennies')
-        print('-------------------')
-                    
-        # Press any key to continue
-        press_any_key_to_continue()
-        
-        return None
+        return None          
 
     def confirm_shutdown(self):
         """Perform controlled shutdown"""
@@ -100,6 +73,56 @@ class coffee_machine:
             menu_selection = ''
     
         return menu_selection
+
+    def report_resources(self):
+        """On-demand output of current remaining machine resources"""
+        
+        # Initialize report_resources() variables
+        cash_bin_total: float = 0.00
+        
+        # Calculate the cash_bin total
+        cash_bin_total = self.total_currency(resources["USD_quarters"], \
+                                             resources["USD_dimes"],
+                                             resources["USD_nickels"],
+                                             resources["USD_pennies"])
+        
+        # Output resource report header
+        print('\nResource report')
+        print('-------------------')
+                    
+        # Output current resources from config data
+        print(f'Water:    {resources["water"]} ml')
+        print(f'Milk:     {resources["milk"]} ml')
+        print(f'Coffee:   {resources["coffee"]} g')
+        print('-------------------')
+        print(f'Cash bin: ${cash_bin_total:0.2f}')
+        print(f'{resources["USD_quarters"]:>3} - Quarters')
+        print(f'{resources["USD_dimes"]:>3} - Dimes')
+        print(f'{resources["USD_nickels"]:>3} - Nickels')
+        print(f'{resources["USD_pennies"]:>3} - Pennies')
+        print('-------------------')
+                    
+        # Press any key to continue
+        press_any_key_to_continue()
+        
+        return None
+    
+    def total_currency(self, quarters: int = 0, \
+                             dimes: int = 0,\
+                             nickels: int = 0, \
+                             pennies: int = 0):
+        """Receive currency type counts and calculate the total currency"""
+
+        # Initialize total_currency() function variables
+        total_currency: float = 0.00
+        
+        # Calculate sum total of all coins 
+        total_currency += quarters * resources["USD_quarters_value"] # Add total for all quarters
+        total_currency += dimes * resources["USD_dimes_value"] # Add total for all dimes
+        total_currency += nickels * resources["USD_nickels_value"] # Add total for all nickels
+        total_currency += pennies * resources["USD_pennies_value"] # Add total for all pennies
+    
+        return total_currency
 
     def validate_user_action(self):
         """Accept and valid requested user action. """ \
