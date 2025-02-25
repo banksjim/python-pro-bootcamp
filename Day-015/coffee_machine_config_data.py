@@ -29,5 +29,8 @@ resources = {
     'water': 300,
     'coffee': 200,
     'milk': 100,
-    'currency_bin': 10.00
+    'quarters': 12,
+    'dimes': 40,
+    'nickels': 50,
+    'pennies': 50
 }
