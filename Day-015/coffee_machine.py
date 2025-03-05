@@ -74,6 +74,30 @@ class coffee_machine:
     
         return menu_selection
 
+    def get_coins(self, currency_unit: str = ''):
+        """Input number of coins for requested current type. """ \
+        """Return number of coins input for the currency type requested."""
+    
+        # Initialize get_coins() function variables
+        coin_count:         int = 0
+        coin_slot_counter:  str = ''
+        valid_coin_deposit: bool = False
+        
+        # Loop until until a valid number is provided for coin_slot_counter
+        while valid_coin_deposit is False:
+        
+            # Fetch currency type from coin_slot
+            coin_slot_counter = input(f'Number of {currency_unit}: ')
+            
+            # Validate that the coin slot returned numeric count of the coin type
+            if coin_slot_counter.isdigit():
+                coin_count = int(coin_slot_counter)
+                valid_coin_deposit = True
+            else: 
+                print(f'Error: Invalid number of {currency_unit} provided')
+        
+        return coin_count                  
+
     def report_resources(self):
         """On-demand output of current remaining machine resources"""
         
@@ -162,8 +186,14 @@ class coffee_machine:
     def main(self): # Main app routine
 
         # Initialize main() variables
-        action:                    int = 0
-        controlled_power_down:     bool = False
+        action:                int = 0
+        coin_slot_counter:     str = ''
+        coin_slot_error:       bool = False
+        deposited_quarters:    int = 0
+        deposited_dimes:       int = 0
+        deposited_nickels:     int = 0
+        deposited_pennies:     int = 0
+        controlled_power_down: bool = False
         
         # Main() logic
         while controlled_power_down is False: # Continuously operate while power is on      
@@ -179,8 +209,16 @@ class coffee_machine:
                 
                 # Handle drink order request
                 case 1 | 2 | 3:
-                    print('') # placeholder statement
-                
+                    
+                    # Prompt to insert coins for drink request
+                    print('\nInsert coins...')               
+                    
+                    # Accept and count coins for supported currency types
+                    deposited_quarters = self.get_coins('quarters')
+                    deposited_dimes    = self.get_coins('dimes')
+                    deposited_nickels  = self.get_coins('nickels')
+                    deposited_pennies  = self.get_coins('pennies')
+                    
                 # Handle refund change request
                 case 4:
                     print('') # placeholder statement
