@@ -172,7 +172,7 @@ class coffee_machine:
         
         # Show user any refunded coin deposits with total returned
         print(f'\nDeposit refunded ${total_deposited:0.2f}')
-        print('---------------------------')
+        print('-------------------------')
         print(f'- Number of quarters: {deposited_quarters}')
         print(f'- Number of dimes:    {deposited_dimes}')
         print(f'- Number of nickels:  {deposited_nickels}')
