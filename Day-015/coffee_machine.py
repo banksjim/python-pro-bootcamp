@@ -11,6 +11,61 @@ class coffee_machine:
         # Declare global variables and constants here
         return None          
 
+    def check_ingredients(self, drink_requested_option: int = 0, \
+                                machine_coffee: float = 0.0,
+                                machine_milk: float = 0.0,
+                                machine_water: float = 0.0):
+        """Receive the option selected by the user for a specific drink and """ \
+        """the remaining machine ingredients. Check the ingredients available for that drink. """ \
+        """Return flag signaling if the drink has the required ingredients remaining """ \
+        """in the machine. If enough ingredients were available also return the  """ \
+        """ingredient amounts to deduct after order."""
+        
+        # Initialize check_ingredients() variables
+        drink_type:          str = ''
+        ingredients_missing: str = ''
+        required_coffee:     float = 0.0
+        required_milk:       float = 0.0
+        required_water:      float = 0.0
+        unfillable_order:    bool = False
+        
+        # Load ingredients required for the user's drink selection
+        match drink_requested_option:
+            
+            # Set the drink type ordered value
+            case 1: # Espresso order
+                drink_type = 'espresso'
+            case 2: # Latte order
+                drink_type = 'latte'
+            case 3: # 
+                drink_type = 'cappuccino'
+                
+        # Lookup the required ingredients for the selected drink              
+        required_coffee = menu[drink_type]["ingredients"]["coffee"]
+        required_milk   = menu[drink_type]["ingredients"]["milk"]
+        required_water  = menu[drink_type]["ingredients"]["water"]
+        
+        # Determine if there are enough ingredients for the drink
+        if machine_coffee < required_coffee:
+            unfillable_order = True
+            ingredients_missing += 'coffee '
+        
+        if machine_milk < required_milk:
+            unfillable_order = True
+            ingredients_missing += 'milk '
+            
+        if machine_water < required_water:
+            unfillable_order = True
+            ingredients_missing += 'water '
+            
+        # If drink order cannot be filled zero out all required ingredients
+        if unfillable_order is True:
+            required_coffee = 0
+            required_milk   = 0
+            required_water  = 0
+        
+        return unfillable_order, required_coffee, required_milk, required_water
+
     def confirm_shutdown(self):
         """Perform controlled shutdown"""
         
@@ -189,13 +244,40 @@ class coffee_machine:
         action:                int = 0
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
+        controlled_power_down: bool = False
+        
+        coffee_use:            float = 0.0
+        milk_use:              float = 0.0
+        water_use:             float = 0.0
+        
         deposited_quarters:    int = 0
         deposited_dimes:       int = 0
         deposited_nickels:     int = 0
         deposited_pennies:     int = 0
-        controlled_power_down: bool = False
+        ingredient_shortage:   bool = False
+        
+        remaining_coffee:      float = 0.0
+        remaining_milk:        float = 0.0
+        remaining_water:       float = 0.0
+        
+        remaining_quarters:    int = 0
+        remaining_dimes:       int = 0
+        remaining_nickels:     int = 0
+        remaining_pennies:     int = 0
         
         # Main() logic
+        
+        # Load available resources from machine config
+        remaining_coffee   = resources["coffee"]
+        remaining_milk     = resources["milk"]
+        remaining_water    = resources["water"]
+        
+        remaining_quarters = resources["USD_quarters"]
+        remaining_dimes    = resources["USD_dimes"]
+        remaining_nickels  = resources["USD_nickels"]
+        remaining_pennies  = resources["USD_pennies"]
+        
+        # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
             
             # Retrieve next action
@@ -209,6 +291,12 @@ class coffee_machine:
                 
                 # Handle drink order request
                 case 1 | 2 | 3:
+                    
+                    # Confirm that ingredients required are available and
+                    # return ingredients that will be used if the order can be filled
+                    ingredient_shortage, coffee_use, milk_use, water_use = \
+                        self.check_ingredients(action, remaining_coffee, remaining_milk, \
+                                               remaining_water)
                     
                     # Prompt to insert coins for drink request
                     print('\nInsert coins...')               
