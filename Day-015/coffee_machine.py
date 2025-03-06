@@ -11,46 +11,112 @@ class coffee_machine:
         # Declare global variables and constants here
         return None          
 
-    def confirm_shutdown(self):
-        """Perform controlled shutdown"""
+    def check_ingredients(self, drink_requested_option: int = 0, \
+                                machine_coffee: float = 0.0,
+                                machine_milk: float = 0.0,
+                                machine_water: float = 0.0):
+        """Receive the option selected by the user for a specific drink and """ \
+        """the remaining machine ingredients. Check the ingredients available for that drink. """ \
+        """Return flag signaling if the drink has the required ingredients remaining """ \
+        """in the machine. If enough ingredients were available also return the  """ \
+        """ingredient amounts to deduct after order."""
         
-        # Initialize confirm_shutdown() variables
-        confirmation_action:        str = ''
-        shutdown_action:            bool = False
-        valid_confirmation_request: bool = False
+        # Initialize check_ingredients() variables
+        drink_type:          str = ''
+        ingredients_missing: str = ''
+        required_coffee:     float = 0.0
+        required_milk:       float = 0.0
+        required_water:      float = 0.0
+        unfillable_order:    bool = False
         
-        # Loop until valid shutdown confirmation is provided
-        while valid_confirmation_request is False:
+        # Load ingredients required for the user's drink selection
+        match drink_requested_option:
             
-            # Prompt for shutdown confirmation
-            confirmation_action = input('\nConfirm shutdown (Y/N)? ').upper()
-            
-            # Validate shutdown confirmation
-            if confirmation_action == 'Y':
-                shutdown_action = True
-                valid_confirmation_request = True
-                print('Shutdown successful...\n')
-            elif confirmation_action == 'N':
-                shutdown_action = False
-                valid_confirmation_request = True                
-            else:
-                valid_confirmation_request = False           
+            # Set the drink type ordered value
+            case 1: # Espresso order
+                drink_type = 'espresso'
+            case 2: # Latte order
+                drink_type = 'latte'
+            case 3: # 
+                drink_type = 'cappuccino'
+                
+        # Lookup the required ingredients for the selected drink              
+        required_coffee = menu[drink_type]["ingredients"]["coffee"]
+        required_milk   = menu[drink_type]["ingredients"]["milk"]
+        required_water  = menu[drink_type]["ingredients"]["water"]
         
-        return shutdown_action
+        # Determine if there are enough ingredients for the drink
+        if machine_coffee < required_coffee:
+            unfillable_order = True
+            ingredients_missing += 'coffee '
+        
+        if machine_milk < required_milk:
+            unfillable_order = True
+            ingredients_missing += 'milk '
+            
+        if machine_water < required_water:
+            unfillable_order = True
+            ingredients_missing += 'water '
+            
+        # If drink order cannot be filled zero out all required ingredients
+        if unfillable_order is True:
+            required_coffee = 0
+            required_milk   = 0
+            required_water  = 0
+        
+        return unfillable_order, required_coffee, required_milk, required_water
+
+    def deposit_currency(self, total_deposited: float = 0.0, \
+                               quarters_deposited: int = 0, \
+                               dimes_deposited: int = 0, \
+                               nickels_deposited: int = 0, \
+                               pennies_deposited: int = 0):
+        """Handle machine currency deposits. """ \
+        """Accept in any previously deposited currency total. """ \
+        """Return updated currency total and number & type of coins deposited this time."""
+               
+        # Clear terminal screen if used
+        clear_terminal()
+        
+        # Show current deposited amount
+        print(f'Total deposited: ${total_deposited:0.2f}\n')
+        
+        # Accept coin deposits for purchase
+        print('Insert coins...\n')               
+        
+        # Accept and count coins for supported currency types
+        quarters_deposited += self.get_coins('quarters')
+        dimes_deposited    += self.get_coins('dimes')
+        nickels_deposited  += self.get_coins('nickels')
+        pennies_deposited  += self.get_coins('pennies')
+        
+        # Update current total of deposited coins
+        total_deposited += quarters_deposited * resources["USD_quarters_value"]
+        total_deposited += dimes_deposited * resources["USD_dimes_value"]
+        total_deposited += nickels_deposited * resources["USD_nickels_value"]
+        total_deposited += pennies_deposited * resources["USD_pennies_value"]
+        
+        return total_deposited, quarters_deposited, dimes_deposited, \
+            nickels_deposited, pennies_deposited
 
     def display_machine_options(self, menu_selection_error: str = '', \
                                 read_only: bool = False, \
-                                validated_menu_action: int = 0):
+                                validated_menu_action: int = 0, \
+                                total_deposited: float = 0.0):
         """Display the current menu selections and error if present. """ \
         """Return the user's menu selection value for validation.""" \
-        """Also support optional parameters to display the menu again read-only """ \
-        """and with any previous error cleared showing the user's validated selection."""
+        """Support an optional parameters to display the menu again read-only """ \
+        """with any previous error cleared showing the user's validated selection.""" \
+        """Receive and show the current total deposited amount."""
 
         # Initialize display_machine_options() variables
         menu_selection: str = ''
         
         # Clear terminal screen if used
         clear_terminal()  
+        
+        # Show current deposited amount
+        print(f'Total deposited: ${total_deposited:0.2f}\n')
         
         # Show requested action error if present then clear it
         if menu_selection_error != '':
@@ -98,6 +164,30 @@ class coffee_machine:
         
         return coin_count                  
 
+    def refund_change(self, total_deposited, deposited_quarters, \
+                              deposited_dimes, deposited_nickels, deposited_pennies):
+        """Handle refund of unused coin deposits.""" \
+        """Accept in the current total deposit amount and number of coins by currency type. """ \
+        """Return a zeroed out total deposit value."""
+        
+        # Show user any refunded coin deposits with total returned
+        print(f'\nDeposit refunded ${total_deposited:0.2f}')
+        print('-------------------------')
+        print(f'- Number of quarters: {deposited_quarters}')
+        print(f'- Number of dimes:    {deposited_dimes}')
+        print(f'- Number of nickels:  {deposited_nickels}')
+        print(f'- Number of pennies:  {deposited_pennies}')
+        
+        # Zero out total deposited and coin counts
+        total_deposited    = 0
+        deposited_quarters = 0
+        deposited_dimes    = 0
+        deposited_nickels  = 0
+        deposited_pennies  = 0        
+        
+        return total_deposited, deposited_quarters, deposited_dimes, \
+               deposited_nickels, deposited_pennies
+
     def report_resources(self):
         """On-demand output of current remaining machine resources"""
         
@@ -131,6 +221,41 @@ class coffee_machine:
         
         return None
     
+    def shutdown(self, total_deposited, deposited_quarters, \
+                         deposited_dimes, deposited_nickels, deposited_pennies):
+        """Perform controlled shutdown"""
+        
+        # Initialize confirm_shutdown() variables
+        confirmation_action:        str = ''
+        shutdown_action:            bool = False
+        valid_confirmation_request: bool = False
+        
+        # Loop until valid shutdown confirmation is provided
+        while valid_confirmation_request is False:
+            
+            # Prompt for shutdown confirmation
+            confirmation_action = input('\nConfirm shutdown (y/n)? ').upper()
+            
+            # Validate shutdown confirmation
+            if confirmation_action == 'Y':
+                shutdown_action = True
+                valid_confirmation_request = True
+                
+                # Refund any deposited coins that were not used
+                if total_deposited > 0:
+                    self.refund_change(total_deposited, deposited_quarters, \
+                                               deposited_dimes, deposited_nickels, \
+                                               deposited_pennies)
+                
+                print('\nShutdown successful...')
+            elif confirmation_action == 'N':
+                shutdown_action = False
+                valid_confirmation_request = True                
+            else:
+                valid_confirmation_request = False           
+        
+        return shutdown_action
+    
     def total_currency(self, quarters: int = 0, \
                              dimes: int = 0,\
                              nickels: int = 0, \
@@ -148,9 +273,10 @@ class coffee_machine:
     
         return total_currency
 
-    def validate_user_action(self):
+    def validate_user_action(self, total_deposited: float = 0.0):
         """Accept and valid requested user action. """ \
-        """Return a valid action option."""
+        """Return a valid action option.""" \
+        """Receive and pass along the current total deposited amount."""
         
         # Initialize valid_user_action() variables
         valid_selection:        bool = False
@@ -161,7 +287,8 @@ class coffee_machine:
         while valid_selection is False: # Loop until a valid user action is input
         
             # Display available coffee machine options
-            requested_action = self.display_machine_options(requested_action_error)
+            requested_action = self.display_machine_options(requested_action_error, \
+                                                            False, 0, total_deposited)
             
             # Clear any previous error message
             requested_action_error = ''
@@ -189,20 +316,56 @@ class coffee_machine:
         action:                int = 0
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
+        controlled_power_down: bool = False
+        ingredient_shortage:   bool = False
+        amount_deposited:      float = 0.0
+        
+        coffee_use:            float = 0.0
+        milk_use:              float = 0.0
+        water_use:             float = 0.0
+        
         deposited_quarters:    int = 0
         deposited_dimes:       int = 0
         deposited_nickels:     int = 0
         deposited_pennies:     int = 0
-        controlled_power_down: bool = False
+        
+        remaining_coffee:      float = 0.0
+        remaining_milk:        float = 0.0
+        remaining_water:       float = 0.0
+        
+        remaining_quarters:    int = 0
+        remaining_dimes:       int = 0
+        remaining_nickels:     int = 0
+        remaining_pennies:     int = 0
         
         # Main() logic
+        
+        # Load available resources from machine config
+        remaining_coffee   = resources["coffee"]
+        remaining_milk     = resources["milk"]
+        remaining_water    = resources["water"]
+        
+        remaining_quarters = resources["USD_quarters"]
+        remaining_dimes    = resources["USD_dimes"]
+        remaining_nickels  = resources["USD_nickels"]
+        remaining_pennies  = resources["USD_pennies"]
+        
+        # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
             
-            # Retrieve next action
-            action = self.validate_user_action()     
+            # Accept coin deposits for purchase
+            amount_deposited, deposited_quarters, deposited_dimes, \
+                deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
+                                                                             deposited_quarters, \
+                                                                             deposited_dimes, \
+                                                                             deposited_nickels, \
+                                                                             deposited_pennies)
+            
+            # Retrieve user selection
+            action = self.validate_user_action(amount_deposited)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
-            self.display_machine_options('', True, action)
+            self.display_machine_options('', True, action, amount_deposited)
             
             # Process machine request options               
             match action:
@@ -210,18 +373,23 @@ class coffee_machine:
                 # Handle drink order request
                 case 1 | 2 | 3:
                     
-                    # Prompt to insert coins for drink request
-                    print('\nInsert coins...')               
-                    
-                    # Accept and count coins for supported currency types
-                    deposited_quarters = self.get_coins('quarters')
-                    deposited_dimes    = self.get_coins('dimes')
-                    deposited_nickels  = self.get_coins('nickels')
-                    deposited_pennies  = self.get_coins('pennies')
+                    # Confirm that ingredients required are available and
+                    # return ingredients that will be used if the order can be filled
+                    ingredient_shortage, coffee_use, milk_use, water_use = \
+                        self.check_ingredients(action, remaining_coffee, remaining_milk, \
+                                               remaining_water)
                     
                 # Handle refund change request
                 case 4:
-                    print('') # placeholder statement
+                    # Refund deposited amounts by currency type
+                    amount_deposited, deposited_quarters, deposited_dimes, \
+                        deposited_nickels, deposited_pennies = \
+                            self.refund_change(amount_deposited, deposited_quarters, \
+                                               deposited_dimes, deposited_nickels, \
+                                               deposited_pennies)
+                    
+                    # Press any key to continue
+                    press_any_key_to_continue()
                     
                 # Handle machine report request
                 case 5:
@@ -229,7 +397,11 @@ class coffee_machine:
                     
                 # Handle controlled power down
                 case 6:
-                    controlled_power_down = self.confirm_shutdown()                    
+                    controlled_power_down = self.shutdown(amount_deposited, \
+                                                                  deposited_quarters, \
+                                                                  deposited_dimes, \
+                                                                  deposited_nickels, \
+                                                                  deposited_pennies)               
 
         return None
 
