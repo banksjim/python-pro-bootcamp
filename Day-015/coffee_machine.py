@@ -93,6 +93,32 @@ class coffee_machine:
         
         return shutdown_action
 
+    def deposit_currency(self):
+        """"""
+        
+        # Initialize deposit_currency() variables
+        total_deposited:    float = 0.0
+        
+        quarters_deposited: int = 0
+        dimes_deposited:    int = 0
+        nickels_deposited:  int = 0
+        pennies_deposited:  int = 0
+        
+        # Clear terminal screen if used
+        clear_terminal()
+        
+        # Accept coin deposits for purchase
+        print('Insert coins...\n')               
+        
+        # Accept and count coins for supported currency types
+        quarters_deposited = self.get_coins('quarters')
+        dimes_deposited    = self.get_coins('dimes')
+        nickels_deposited  = self.get_coins('nickels')
+        pennies_deposited  = self.get_coins('pennies')
+        
+        return total_deposited, quarters_deposited, dimes_deposited, \
+            nickels_deposited, pennies_deposited
+
     def display_machine_options(self, menu_selection_error: str = '', \
                                 read_only: bool = False, \
                                 validated_menu_action: int = 0):
@@ -280,7 +306,11 @@ class coffee_machine:
         # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
             
-            # Retrieve next action
+            # Accept coin deposits for purchase
+            total_deposited, deposited_quarters, deposited_dimes, \
+                deposited_nickels, deposited_pennies = self.deposit_currency()
+            
+            # Retrieve user selection
             action = self.validate_user_action()     
             
             # Redisplay the menu screen read-only and clear any previous errors 
@@ -297,15 +327,6 @@ class coffee_machine:
                     ingredient_shortage, coffee_use, milk_use, water_use = \
                         self.check_ingredients(action, remaining_coffee, remaining_milk, \
                                                remaining_water)
-                    
-                    # Prompt to insert coins for drink request
-                    print('\nInsert coins...')               
-                    
-                    # Accept and count coins for supported currency types
-                    deposited_quarters = self.get_coins('quarters')
-                    deposited_dimes    = self.get_coins('dimes')
-                    deposited_nickels  = self.get_coins('nickels')
-                    deposited_pennies  = self.get_coins('pennies')
                     
                 # Handle refund change request
                 case 4:
