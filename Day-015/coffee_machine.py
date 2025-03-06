@@ -93,12 +93,12 @@ class coffee_machine:
         
         return shutdown_action
 
-    def deposit_currency(self):
-        """"""
+    def deposit_currency(self, total_deposited: float = 0.0):
+        """Handle machine currency deposits. """ \
+        """Accept in any previously deposited currency total. """ \
+        """Return updated currency total and number & type of coins deposited this time."""
         
-        # Initialize deposit_currency() variables
-        total_deposited:    float = 0.0
-        
+        # Initialize deposit_currency() variables        
         quarters_deposited: int = 0
         dimes_deposited:    int = 0
         nickels_deposited:  int = 0
@@ -106,6 +106,9 @@ class coffee_machine:
         
         # Clear terminal screen if used
         clear_terminal()
+        
+        # Show current deposited amount
+        print(f'Total deposited: ${total_deposited:0.2f}\n')
         
         # Accept coin deposits for purchase
         print('Insert coins...\n')               
@@ -116,22 +119,33 @@ class coffee_machine:
         nickels_deposited  = self.get_coins('nickels')
         pennies_deposited  = self.get_coins('pennies')
         
+        # Update current total of deposited coins
+        total_deposited += quarters_deposited * resources["USD_quarters_value"]
+        total_deposited += dimes_deposited * resources["USD_dimes_value"]
+        total_deposited += nickels_deposited * resources["USD_nickels_value"]
+        total_deposited += pennies_deposited * resources["USD_pennies_value"]
+        
         return total_deposited, quarters_deposited, dimes_deposited, \
             nickels_deposited, pennies_deposited
 
     def display_machine_options(self, menu_selection_error: str = '', \
                                 read_only: bool = False, \
-                                validated_menu_action: int = 0):
+                                validated_menu_action: int = 0, \
+                                total_deposited: float = 0.0):
         """Display the current menu selections and error if present. """ \
         """Return the user's menu selection value for validation.""" \
-        """Also support optional parameters to display the menu again read-only """ \
-        """and with any previous error cleared showing the user's validated selection."""
+        """Support an optional parameters to display the menu again read-only """ \
+        """with any previous error cleared showing the user's validated selection.""" \
+        """Receive and show the current total deposited amount."""
 
         # Initialize display_machine_options() variables
         menu_selection: str = ''
         
         # Clear terminal screen if used
         clear_terminal()  
+        
+        # Show current deposited amount
+        print(f'Total deposited: ${total_deposited:0.2f}\n')
         
         # Show requested action error if present then clear it
         if menu_selection_error != '':
@@ -229,9 +243,10 @@ class coffee_machine:
     
         return total_currency
 
-    def validate_user_action(self):
+    def validate_user_action(self, total_deposited: float = 0.0):
         """Accept and valid requested user action. """ \
-        """Return a valid action option."""
+        """Return a valid action option.""" \
+        """Receive and pass along the current total deposited amount."""
         
         # Initialize valid_user_action() variables
         valid_selection:        bool = False
@@ -242,7 +257,8 @@ class coffee_machine:
         while valid_selection is False: # Loop until a valid user action is input
         
             # Display available coffee machine options
-            requested_action = self.display_machine_options(requested_action_error)
+            requested_action = self.display_machine_options(requested_action_error, \
+                                                            False, 0, total_deposited)
             
             # Clear any previous error message
             requested_action_error = ''
@@ -271,6 +287,8 @@ class coffee_machine:
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
         controlled_power_down: bool = False
+        ingredient_shortage:   bool = False
+        amount_deposited:      float = 0.0
         
         coffee_use:            float = 0.0
         milk_use:              float = 0.0
@@ -280,7 +298,6 @@ class coffee_machine:
         deposited_dimes:       int = 0
         deposited_nickels:     int = 0
         deposited_pennies:     int = 0
-        ingredient_shortage:   bool = False
         
         remaining_coffee:      float = 0.0
         remaining_milk:        float = 0.0
@@ -307,14 +324,14 @@ class coffee_machine:
         while controlled_power_down is False: # Continuously operate while power is on      
             
             # Accept coin deposits for purchase
-            total_deposited, deposited_quarters, deposited_dimes, \
-                deposited_nickels, deposited_pennies = self.deposit_currency()
+            amount_deposited, deposited_quarters, deposited_dimes, \
+                deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited)
             
             # Retrieve user selection
-            action = self.validate_user_action()     
+            action = self.validate_user_action(amount_deposited)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
-            self.display_machine_options('', True, action)
+            self.display_machine_options('', True, action, amount_deposited)
             
             # Process machine request options               
             match action:
