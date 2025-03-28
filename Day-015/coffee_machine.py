@@ -125,8 +125,6 @@ class coffee_machine:
         if read_only is False:
             menu_selection = input('Selection: ')
         else:
-            pass  # Placeholder for handling unavailable drink orders
-            pass  # Placeholder for handling unavailable drink orders
             print(f'Selection: {validated_menu_action}')
             menu_selection = ''
     
@@ -328,14 +326,15 @@ class coffee_machine:
 
         # Initialize main() variables
         action:                int = 0
+        amount_deposited:      float = 0.0
+        refund_amount:     float = 0.0
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
         controlled_power_down: bool = False
         dispenser_message:     str = ''
         drink_ordered:         str = ''
         ingredient_shortage:   bool = False
-        amount_deposited:      float = 0.0
-        
+
         coffee_use:            float = 0.0
         milk_use:              float = 0.0
         water_use:             float = 0.0
@@ -369,8 +368,12 @@ class coffee_machine:
         # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
             
-            # Accept coin deposits for purchase only if ingredient_shortage is False
-            if ingredient_shortage is False:
+            # Accept coin deposits for purchase only if ingredient_shortage is False or
+            # the refund is less than zero (more funds required for purchase)
+
+>>>>> START HERE: Fulfillment message with refund is not displaying. The if below is not working
+
+            if (ingredient_shortage is False) or (refund_amount < 0):
                 amount_deposited, deposited_quarters, deposited_dimes, \
                 deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
                                                                              deposited_quarters, \
@@ -405,8 +408,22 @@ class coffee_machine:
                     # If enough machine ingredients then continue to try to fill order
                     # else inform user the drink is temporarily unavailable 
                     if ingredient_shortage is False: # Machine has enough ingredients to fill order
-                        # Continue processing order
-                        print('')
+                        
+                        # Calculate amount owed or to be refunded
+                        refund_amount = amount_deposited - menu[drink_ordered]["cost"]
+                        
+                        # Process order or request additional funds
+                        if refund_amount >= 0.0: # Credit balance deposited
+                            
+                            # Show default dispenser message
+                            dispenser_message = 'Here is your ' + drink_ordered + '. '
+                            
+                            # Append dispenser message uniquely for refund owed or exact change
+                            if refund_amount == 0.0:
+                                dispenser_message += 'Thanks for using exact change.'
+                            else:
+                                dispenser_message += 'Returning $' + str(refund_amount)
+                        
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
                     
