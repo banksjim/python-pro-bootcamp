@@ -11,39 +11,27 @@ class coffee_machine:
         # Declare global variables and constants here
         return None          
 
-    def check_ingredients(self, drink_requested_option: int = 0, \
+    def check_ingredients(self, drink_ordered: str = '', \
                                 machine_coffee: float = 0.0,
                                 machine_milk: float = 0.0,
                                 machine_water: float = 0.0):
-        """Receive the option selected by the user for a specific drink and """ \
-        """the remaining machine ingredients. Check the ingredients available for that drink. """ \
+        """Receive the drink ordered name as selected by the user and the remaining """ \
+        """machine ingredients. Check the ingredients available for that drink. """ \
         """Return flag signaling if the drink has the required ingredients remaining """ \
         """in the machine. If enough ingredients were available also return the  """ \
         """ingredient amounts to deduct after order."""
         
         # Initialize check_ingredients() variables
-        drink_type:          str = ''
         ingredients_missing: str = ''
         required_coffee:     float = 0.0
         required_milk:       float = 0.0
         required_water:      float = 0.0
-        unfillable_order:    bool = False
-        
-        # Load ingredients required for the user's drink selection
-        match drink_requested_option:
-            
-            # Set the drink type ordered value
-            case 1: # Espresso order
-                drink_type = 'espresso'
-            case 2: # Latte order
-                drink_type = 'latte'
-            case 3: # 
-                drink_type = 'cappuccino'
+        unfillable_order:    bool = False       
                 
         # Lookup the required ingredients for the selected drink              
-        required_coffee = menu[drink_type]["ingredients"]["coffee"]
-        required_milk   = menu[drink_type]["ingredients"]["milk"]
-        required_water  = menu[drink_type]["ingredients"]["water"]
+        required_coffee = menu[drink_ordered]["ingredients"]["coffee"]
+        required_milk   = menu[drink_ordered]["ingredients"]["milk"]
+        required_water  = menu[drink_ordered]["ingredients"]["water"]
         
         # Determine if there are enough ingredients for the drink
         if machine_coffee < required_coffee:
@@ -90,7 +78,9 @@ class coffee_machine:
         nickels_deposited  += self.get_coins('nickels')
         pennies_deposited  += self.get_coins('pennies')
         
-        # Update current total of deposited coins
+        # Recalculate total deposited based on total coins inserted so far
+        total_deposited = 0
+        
         total_deposited += quarters_deposited * resources["USD_quarters_value"]
         total_deposited += dimes_deposited * resources["USD_dimes_value"]
         total_deposited += nickels_deposited * resources["USD_nickels_value"]
@@ -163,6 +153,22 @@ class coffee_machine:
                 print(f'Error: Invalid number of {currency_unit} provided')
         
         return coin_count                  
+
+    def get_drink_description(self, drink_requested_option: int = 0):
+        # Initialize function variables
+        drink_name: str = ''
+    
+        # Set the drink type ordered value
+        match drink_requested_option:
+            
+            case 1: # Espresso order
+                drink_name = 'espresso'
+            case 2: # Latte order
+                drink_name = 'latte'
+            case 3: # 
+                drink_name = 'cappuccino'
+    
+        return drink_name
 
     def refund_change(self, total_deposited, deposited_quarters, \
                               deposited_dimes, deposited_nickels, deposited_pennies):
@@ -317,6 +323,7 @@ class coffee_machine:
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
         controlled_power_down: bool = False
+        drink_ordered:         str = ''
         ingredient_shortage:   bool = False
         amount_deposited:      float = 0.0
         
@@ -373,11 +380,14 @@ class coffee_machine:
                 # Handle drink order request
                 case 1 | 2 | 3:
                     
+                    # Set the name of the drink ordered
+                    drink_ordered = self.get_drink_description(action)
+                    
                     # Confirm that ingredients required are available and
                     # return ingredients that will be used if the order can be filled
                     ingredient_shortage, coffee_use, milk_use, water_use = \
-                        self.check_ingredients(action, remaining_coffee, remaining_milk, \
-                                               remaining_water)
+                        self.check_ingredients(drink_ordered, remaining_coffee, remaining_milk, \
+                                               remaining_water)                   
                     
                 # Handle refund change request
                 case 4:
