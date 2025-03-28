@@ -89,7 +89,7 @@ class coffee_machine:
         return total_deposited, quarters_deposited, dimes_deposited, \
             nickels_deposited, pennies_deposited
 
-    def display_machine_options(self, menu_selection_error: str = '', \
+    def display_machine_options(self, menu_selection_message: str = '', \
                                 read_only: bool = False, \
                                 validated_menu_action: int = 0, \
                                 total_deposited: float = 0.0):
@@ -104,13 +104,13 @@ class coffee_machine:
         
         # Clear terminal screen if used
         clear_terminal()  
-        
+               
         # Show current deposited amount
         print(f'Total deposited: ${total_deposited:0.2f}\n')
         
         # Show requested action error if present then clear it
-        if menu_selection_error != '':
-            print(f'{menu_selection_error}\n')                       
+        if menu_selection_message != '':
+            print(f'{menu_selection_message}\n')                       
     
         # Show user options
         print('Available options:\n')
@@ -125,6 +125,8 @@ class coffee_machine:
         if read_only is False:
             menu_selection = input('Selection: ')
         else:
+            pass  # Placeholder for handling unavailable drink orders
+            pass  # Placeholder for handling unavailable drink orders
             print(f'Selection: {validated_menu_action}')
             menu_selection = ''
     
@@ -279,25 +281,31 @@ class coffee_machine:
     
         return total_currency
 
-    def validate_user_action(self, total_deposited: float = 0.0):
+    def validate_user_action(self, total_deposited: float = 0.0, \
+                                   dispenser_message: str = ''):
         """Accept and valid requested user action. """ \
         """Return a valid action option.""" \
         """Receive and pass along the current total deposited amount."""
         
         # Initialize valid_user_action() variables
-        valid_selection:        bool = False
-        requested_action:       str = ''
-        requested_action_error: str = ''
-        validated_action:       int = 0
+        valid_selection:          bool = False
+        requested_action:         str = ''
+        requested_action_message: str = ''
+        validated_action:         int = 0
         
         while valid_selection is False: # Loop until a valid user action is input
         
+            # Initialize requested action message to the dispenser message if provided
+            if dispenser_message:
+                requested_action_message = dispenser_message
+        
             # Display available coffee machine options
-            requested_action = self.display_machine_options(requested_action_error, \
+            requested_action = self.display_machine_options(requested_action_message, \
                                                             False, 0, total_deposited)
             
-            # Clear any previous error message
-            requested_action_error = ''
+            # Clear any previous dispenser or error message
+            dispenser_message = ''
+            requested_action_message = ''
                    
             # Validate that requested action is numeric
             if requested_action.isdigit():
@@ -307,11 +315,11 @@ class coffee_machine:
                     validated_action = int(requested_action)
                     valid_selection = True
                 else:
-                    requested_action_error = 'Error: Request not in valid range'
+                    requested_action_message = 'Error: Request not in valid range'
                     valid_selection = False
                 
             else:
-                requested_action_error = 'Error: Request must be numeric'
+                requested_action_message = 'Error: Request must be numeric'
                 valid_selection = False          
             
         return validated_action
@@ -323,6 +331,7 @@ class coffee_machine:
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
         controlled_power_down: bool = False
+        dispenser_message:     str = ''
         drink_ordered:         str = ''
         ingredient_shortage:   bool = False
         amount_deposited:      float = 0.0
@@ -360,8 +369,9 @@ class coffee_machine:
         # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
             
-            # Accept coin deposits for purchase
-            amount_deposited, deposited_quarters, deposited_dimes, \
+            # Accept coin deposits for purchase only if ingredient_shortage is False
+            if ingredient_shortage is False:
+                amount_deposited, deposited_quarters, deposited_dimes, \
                 deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
                                                                              deposited_quarters, \
                                                                              deposited_dimes, \
@@ -369,7 +379,7 @@ class coffee_machine:
                                                                              deposited_pennies)
             
             # Retrieve user selection
-            action = self.validate_user_action(amount_deposited)     
+            action = self.validate_user_action(amount_deposited, dispenser_message)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
             self.display_machine_options('', True, action, amount_deposited)
@@ -387,7 +397,18 @@ class coffee_machine:
                     # return ingredients that will be used if the order can be filled
                     ingredient_shortage, coffee_use, milk_use, water_use = \
                         self.check_ingredients(drink_ordered, remaining_coffee, remaining_milk, \
-                                               remaining_water)                   
+                                               remaining_water)  
+                        
+                    # Clear the order dispenser message
+                    dispenser_message = ''
+                    
+                    # If enough machine ingredients then continue to try to fill order
+                    # else inform user the drink is temporarily unavailable 
+                    if ingredient_shortage is False: # Machine has enough ingredients to fill order
+                        # Continue processing order
+                        print('')
+                    else:
+                        dispenser_message = 'Error: Selection unavailable until machine refilled'
                     
                 # Handle refund change request
                 case 4:
