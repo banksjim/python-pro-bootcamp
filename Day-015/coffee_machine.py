@@ -423,6 +423,17 @@ class coffee_machine:
                             else:
                                 dispenser_message += f'Returning ${refund_amount:.2f}.'
                         
+                            # Update current machine resources
+                            remaining_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
+                            remaining_milk -= menu[drink_ordered]["ingredients"]["milk"]
+                            remaining_water -= menu[drink_ordered]["ingredients"]["coffee"]                            
+                        
+                            # Add all deposited funds to the cash bin
+                            remaining_quarters += deposited_quarters
+                            remaining_dimes += deposited_dimes
+                            remaining_nickels += deposited_nickels
+                            remaining_pennies += deposited_pennies
+                            
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
                     
