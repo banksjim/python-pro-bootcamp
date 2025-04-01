@@ -194,36 +194,35 @@ class coffee_machine:
         return total_deposited, deposited_quarters, deposited_dimes, \
                deposited_nickels, deposited_pennies
 
-    def report_resources(self):
+    def report_resources(self, coffee: float = 0.0, milk: float = 0.0, water: float = 0.0, \
+                               quarters: int = 0, dimes: int=0, nickels: int = 0, pennies: int = 0):
         """On-demand output of current remaining machine resources"""
         
         # Initialize report_resources() variables
         cash_bin_total: float = 0.00
         
         # Calculate the cash_bin total
-        cash_bin_total = self.total_currency(resources["USD_quarters"], \
-                                             resources["USD_dimes"],
-                                             resources["USD_nickels"],
-                                             resources["USD_pennies"])
+        cash_bin_total = self.total_currency(quarters, dimes, nickels, pennies)
         
         # Output resource report header
         print('\nResource report')
         print('-------------------')
                     
         # Output current resources from config data
-        print(f'Water:    {resources["water"]} ml')
-        print(f'Milk:     {resources["milk"]} ml')
-        print(f'Coffee:   {resources["coffee"]} g')
+        print(f'Coffee: {coffee:.1f} g')
+        print(f'Milk:   {milk:.1f} ml')
+        print(f'Water:  {water:.1f} ml')
         print('-------------------')
         print(f'Cash bin: ${cash_bin_total:0.2f}')
-        print(f'{resources["USD_quarters"]:>3} - Quarters')
-        print(f'{resources["USD_dimes"]:>3} - Dimes')
-        print(f'{resources["USD_nickels"]:>3} - Nickels')
-        print(f'{resources["USD_pennies"]:>3} - Pennies')
+        print(f'{quarters:>3} - Quarters')
+        print(f'{dimes:>3} - Dimes')
+        print(f'{nickels:>3} - Nickels')
+        print(f'{pennies:>3} - Pennies')
         print('-------------------')
                     
         # Press any key to continue
         press_any_key_to_continue()
+        
         
         return None
     
@@ -426,7 +425,7 @@ class coffee_machine:
                             # Update current machine resources
                             remaining_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
                             remaining_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            remaining_water -= menu[drink_ordered]["ingredients"]["coffee"]                            
+                            remaining_water -= menu[drink_ordered]["ingredients"]["water"]                            
                         
                             # Add all deposited funds to the cash bin
                             remaining_quarters += deposited_quarters
@@ -451,7 +450,9 @@ class coffee_machine:
                     
                 # Handle machine report request
                 case 5:
-                    self.report_resources()                  
+                    self.report_resources(remaining_coffee, remaining_milk, remaining_water, \
+                                          remaining_quarters, remaining_dimes, remaining_nickels, \
+                                          remaining_pennies)                  
                     
                 # Handle controlled power down
                 case 6:
