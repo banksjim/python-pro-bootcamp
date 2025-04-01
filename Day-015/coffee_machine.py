@@ -368,16 +368,17 @@ class coffee_machine:
         # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
             
-            # Accept coin deposits for purchase only if ingredient_shortage is False or
-            # the refund is less than zero (more funds required for purchase)
+            # Accept coin deposits for purchase only if more funds are needed for an order and
+            # no ingredient shortage for an order has been found
 
-            if (ingredient_shortage is False) and (refund_amount < 0):
-                amount_deposited, deposited_quarters, deposited_dimes, \
-                deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
-                                                                             deposited_quarters, \
-                                                                             deposited_dimes, \
-                                                                             deposited_nickels, \
-                                                                             deposited_pennies)
+            if (amount_deposited == 0) or (refund_amount < 0): # Check if more funds needed
+                if ingredient_shortage is False: # And no ingredient shortages
+                    amount_deposited, deposited_quarters, deposited_dimes, \
+                    deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
+                                                                    deposited_quarters, \
+                                                                    deposited_dimes, \
+                                                                    deposited_nickels, \
+                                                                    deposited_pennies)
             
             # Retrieve user selection
             action = self.validate_user_action(amount_deposited, dispenser_message)     
@@ -420,7 +421,7 @@ class coffee_machine:
                             if refund_amount == 0.0:
                                 dispenser_message += 'Thanks for using exact change.'
                             else:
-                                dispenser_message += f'Returning ${refund_amount:.2f}'
+                                dispenser_message += f'Returning ${refund_amount:.2f}.'
                         
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
