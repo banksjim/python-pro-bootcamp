@@ -3,7 +3,7 @@ menu = {
         'ingredients': {
             'coffee': 24,
             'milk': 100,
-            'water': 250
+            'water': 240
         },
         'cost': 3.00
     },
@@ -26,9 +26,9 @@ menu = {
 }
 
 resources = {
-    'coffee': 200,
-    'milk': 100,
-    'water': 300,
+    'coffee': 2000,
+    'milk': 1000,
+    'water': 3000,
     'USD_quarters': 12,
     'USD_quarters_value': 0.25,
     'USD_dimes': 40,
