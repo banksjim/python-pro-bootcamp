@@ -1,34 +1,34 @@
 menu = {
+    'cappuccino': {
+        'ingredients': {
+            'coffee': 24,
+            'milk': 100,
+            'water': 250
+        },
+        'cost': 3.00
+    },
     'espresso': {
         'ingredients': {
-            'water': 50,
             'coffee': 18,
-            'milk': 0            
+            'milk': 0,
+            'water': 50
         },
         'cost': 1.50
     },
     'latte': {
         'ingredients': {
-            'water': 200,
             'coffee': 24,
-            'milk': 150            
+            'milk': 150,
+            'water': 200
         },
         'cost': 2.50
-    },
-    'cappuccino': {
-        'ingredients': {
-            'water': 250,
-            'coffee': 24,
-            'milk': 100            
-        },
-        'cost': 3.00
     }
 }
 
 resources = {
-    'water': 300,
     'coffee': 200,
     'milk': 100,
+    'water': 300,
     'USD_quarters': 12,
     'USD_quarters_value': 0.25,
     'USD_dimes': 40,
