@@ -327,7 +327,7 @@ class coffee_machine:
         # Initialize main() variables
         action:                int = 0
         amount_deposited:      float = 0.0
-        refund_amount:     float = 0.0
+        refund_amount:         float = 0.0
         coin_slot_counter:     str = ''
         coin_slot_error:       bool = False
         controlled_power_down: bool = False
@@ -371,9 +371,7 @@ class coffee_machine:
             # Accept coin deposits for purchase only if ingredient_shortage is False or
             # the refund is less than zero (more funds required for purchase)
 
->>>>> START HERE: Fulfillment message with refund is not displaying. The if below is not working
-
-            if (ingredient_shortage is False) or (refund_amount < 0):
+            if (ingredient_shortage is False) and (refund_amount < 0):
                 amount_deposited, deposited_quarters, deposited_dimes, \
                 deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
                                                                              deposited_quarters, \
@@ -416,13 +414,13 @@ class coffee_machine:
                         if refund_amount >= 0.0: # Credit balance deposited
                             
                             # Show default dispenser message
-                            dispenser_message = 'Here is your ' + drink_ordered + '. '
+                            dispenser_message = f'Here is your {drink_ordered}. '
                             
                             # Append dispenser message uniquely for refund owed or exact change
                             if refund_amount == 0.0:
                                 dispenser_message += 'Thanks for using exact change.'
                             else:
-                                dispenser_message += 'Returning $' + str(refund_amount)
+                                dispenser_message += f'Returning ${refund_amount:.2f}'
                         
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
