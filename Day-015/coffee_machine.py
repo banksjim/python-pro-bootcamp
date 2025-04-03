@@ -52,7 +52,7 @@ class coffee_machine:
             required_milk   = 0
             required_water  = 0
         
-        return unfillable_order, required_coffee, required_milk, required_water
+        return unfillable_order
 
     def deposit_currency(self, total_deposited: float = 0.0, \
                                quarters_deposited: int = 0, \
@@ -327,16 +327,10 @@ class coffee_machine:
         action:                int = 0
         amount_deposited:      float = 0.0
         refund_amount:         float = 0.0
-        coin_slot_counter:     str = ''
-        coin_slot_error:       bool = False
         controlled_power_down: bool = False
         dispenser_message:     str = ''
         drink_ordered:         str = ''
         ingredient_shortage:   bool = False
-
-        coffee_use:            float = 0.0
-        milk_use:              float = 0.0
-        water_use:             float = 0.0
         
         deposited_quarters:    int = 0
         deposited_dimes:       int = 0
@@ -396,9 +390,8 @@ class coffee_machine:
                     
                     # Confirm that ingredients required are available and
                     # return ingredients that will be used if the order can be filled
-                    ingredient_shortage, coffee_use, milk_use, water_use = \
-                        self.check_ingredients(drink_ordered, remaining_coffee, remaining_milk, \
-                                               remaining_water)  
+                    ingredient_shortage = self.check_ingredients(drink_ordered, remaining_coffee, \
+                                              remaining_milk, remaining_water)  
                         
                     # Clear the order dispenser message
                     dispenser_message = ''
