@@ -170,14 +170,17 @@ class coffee_machine:
     
         return drink_name
 
-    def refund_change(self, total_deposited, deposited_quarters, \
-                              deposited_dimes, deposited_nickels, deposited_pennies):
+    def refund_change(self, amount: float = 0.0, \
+                            deposited_quarters: int = 0, \
+                            deposited_dimes: int = 0, \
+                            deposited_nickels: int = 0, \
+                            deposited_pennies: int = 0):
         """Handle refund of unused coin deposits.""" \
         """Accept in the current total deposit amount and number of coins by currency type. """ \
         """Return a zeroed out total deposit value."""
         
         # Show user any refunded coin deposits with total returned
-        print(f'\nDeposit refunded ${total_deposited:0.2f}')
+        print(f'\nRefund amount ${amount:0.2f}')
         print('-------------------------')
         print(f'- Number of quarters: {deposited_quarters}')
         print(f'- Number of dimes:    {deposited_dimes}')
@@ -185,14 +188,14 @@ class coffee_machine:
         print(f'- Number of pennies:  {deposited_pennies}')
         
         # Zero out total deposited and coin counts
-        total_deposited    = 0
+        amount             = 0
         deposited_quarters = 0
         deposited_dimes    = 0
         deposited_nickels  = 0
         deposited_pennies  = 0        
         
-        return total_deposited, deposited_quarters, deposited_dimes, \
-               deposited_nickels, deposited_pennies
+        return amount, deposited_quarters, deposited_dimes, \
+                       deposited_nickels, deposited_pennies
 
     def report_resources(self, coffee: float = 0.0, milk: float = 0.0, water: float = 0.0, \
                                quarters: int = 0, dimes: int=0, nickels: int = 0, pennies: int = 0):
