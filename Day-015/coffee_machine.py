@@ -170,14 +170,17 @@ class coffee_machine:
     
         return drink_name
 
-    def refund_change(self, total_deposited, deposited_quarters, \
-                              deposited_dimes, deposited_nickels, deposited_pennies):
+    def refund_change(self, amount: float = 0.0, \
+                            deposited_quarters: int = 0, \
+                            deposited_dimes: int = 0, \
+                            deposited_nickels: int = 0, \
+                            deposited_pennies: int = 0):
         """Handle refund of unused coin deposits.""" \
         """Accept in the current total deposit amount and number of coins by currency type. """ \
         """Return a zeroed out total deposit value."""
         
         # Show user any refunded coin deposits with total returned
-        print(f'\nDeposit refunded ${total_deposited:0.2f}')
+        print(f'\nRefund amount ${amount:0.2f}')
         print('-------------------------')
         print(f'- Number of quarters: {deposited_quarters}')
         print(f'- Number of dimes:    {deposited_dimes}')
@@ -185,14 +188,14 @@ class coffee_machine:
         print(f'- Number of pennies:  {deposited_pennies}')
         
         # Zero out total deposited and coin counts
-        total_deposited    = 0
+        amount             = 0
         deposited_quarters = 0
         deposited_dimes    = 0
         deposited_nickels  = 0
         deposited_pennies  = 0        
         
-        return total_deposited, deposited_quarters, deposited_dimes, \
-               deposited_nickels, deposited_pennies
+        return amount, deposited_quarters, deposited_dimes, \
+                       deposited_nickels, deposited_pennies
 
     def report_resources(self, coffee: float = 0.0, milk: float = 0.0, water: float = 0.0, \
                                quarters: int = 0, dimes: int=0, nickels: int = 0, pennies: int = 0):
@@ -226,9 +229,13 @@ class coffee_machine:
         
         return None
     
-    def shutdown(self, total_deposited, deposited_quarters, \
-                         deposited_dimes, deposited_nickels, deposited_pennies):
-        """Perform controlled shutdown"""
+    def shutdown(self, amount_deposited: float = 0.0, \
+                       deposited_quarters: int = 0, \
+                       deposited_dimes: int = 0, \
+                       deposited_nickels: int = 0, \
+                       deposited_pennies: int = 0):
+        """Perform controlled shutdown and refund any existing deposit amount.""" \
+        """Return whether or now the shutdown was successfully confirmed."""
         
         # Initialize confirm_shutdown() variables
         confirmation_action:        str = ''
@@ -247,10 +254,10 @@ class coffee_machine:
                 valid_confirmation_request = True
                 
                 # Refund any deposited coins that were not used
-                if total_deposited > 0:
-                    self.refund_change(total_deposited, deposited_quarters, \
-                                               deposited_dimes, deposited_nickels, \
-                                               deposited_pennies)
+                if amount_deposited > 0:
+                    self.refund_change(amount_deposited, deposited_quarters, \
+                                       deposited_dimes, deposited_nickels, \
+                                       deposited_pennies)
                 
                 print('\nShutdown successful...')
             elif confirmation_action == 'N':
@@ -450,10 +457,10 @@ class coffee_machine:
                 # Handle controlled power down
                 case 6:
                     controlled_power_down = self.shutdown(amount_deposited, \
-                                                                  deposited_quarters, \
-                                                                  deposited_dimes, \
-                                                                  deposited_nickels, \
-                                                                  deposited_pennies)               
+                                                          deposited_quarters, \
+                                                          deposited_dimes, \
+                                                          deposited_nickels, \
+                                                          deposited_pennies)               
 
         return None
 
