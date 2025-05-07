@@ -54,14 +54,16 @@ class coffee_machine:
         
         return unfillable_order
 
-    def deposit_currency(self, total_deposited: float = 0.0, \
-                               quarters_deposited: int = 0, \
-                               dimes_deposited: int = 0, \
-                               nickels_deposited: int = 0, \
-                               pennies_deposited: int = 0):
+    def deposit_currency(self):
         """Handle machine currency deposits. """ \
-        """Accept in any previously deposited currency total. """ \
-        """Return updated currency total and number & type of coins deposited this time."""
+        """Return the current deposit amount along with the number of coins deposited by type."""
+        
+        # Initialize deposit_currency() function variables
+        amount_deposited:   float = 0.0
+        quarters_deposited: int = 0
+        dimes_deposited:    int = 0
+        nickels_deposited:  int = 0
+        pennies_deposited:  int = 0
                
         # Clear terminal screen if used
         clear_terminal()
@@ -78,15 +80,13 @@ class coffee_machine:
         nickels_deposited  += self.get_coins('nickels')
         pennies_deposited  += self.get_coins('pennies')
         
-        # Recalculate total deposited based on total coins inserted so far
-        total_deposited = 0
+        # Calculate the amount deposited based on the coins inserted        
+        amount_deposited += quarters_deposited * resources["USD_quarters_value"]
+        amount_deposited += dimes_deposited    * resources["USD_dimes_value"]
+        amount_deposited += nickels_deposited  * resources["USD_nickels_value"]
+        amount_deposited += pennies_deposited  * resources["USD_pennies_value"]
         
-        total_deposited += quarters_deposited * resources["USD_quarters_value"]
-        total_deposited += dimes_deposited * resources["USD_dimes_value"]
-        total_deposited += nickels_deposited * resources["USD_nickels_value"]
-        total_deposited += pennies_deposited * resources["USD_pennies_value"]
-        
-        return total_deposited, quarters_deposited, dimes_deposited, \
+        return amount_deposited, quarters_deposited, dimes_deposited, \
             nickels_deposited, pennies_deposited
 
     def display_machine_options(self, menu_selection_message: str = '', \
@@ -378,7 +378,19 @@ class coffee_machine:
                                                                     deposited_quarters, \
                                                                     deposited_dimes, \
                                                                     deposited_nickels, \
-                                                                    deposited_pennies)
+                                                                    deposited_pennies)           
+
+            # Add all deposited funds to the cash bin
+            remaining_quarters += deposited_quarters
+            remaining_dimes    += deposited_dimes
+            remaining_nickels  += deposited_nickels
+            remaining_pennies  += deposited_pennies
+            
+            # Reset deposited currencies
+            deposited_quarters = 0
+            deposited_dimes    = 0
+            deposited_nickels  = 0
+            deposited_pennies  = 0
             
             # Retrieve user selection
             action = self.validate_user_action(amount_deposited, dispenser_message)     
@@ -426,12 +438,6 @@ class coffee_machine:
                             remaining_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
                             remaining_milk -= menu[drink_ordered]["ingredients"]["milk"]
                             remaining_water -= menu[drink_ordered]["ingredients"]["water"]                            
-                        
-                            # Add all deposited funds to the cash bin
-                            remaining_quarters += deposited_quarters
-                            remaining_dimes += deposited_dimes
-                            remaining_nickels += deposited_nickels
-                            remaining_pennies += deposited_pennies
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
