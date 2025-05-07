@@ -378,13 +378,19 @@ class coffee_machine:
                                                                     deposited_quarters, \
                                                                     deposited_dimes, \
                                                                     deposited_nickels, \
-                                                                    deposited_pennies)
-            
+                                                                    deposited_pennies)           
+
             # Add all deposited funds to the cash bin
             remaining_quarters += deposited_quarters
-            remaining_dimes += deposited_dimes
-            remaining_nickels += deposited_nickels
-            remaining_pennies += deposited_pennies
+            remaining_dimes    += deposited_dimes
+            remaining_nickels  += deposited_nickels
+            remaining_pennies  += deposited_pennies
+            
+            # Reset deposited currencies
+            deposited_quarters = 0
+            deposited_dimes    = 0
+            deposited_nickels  = 0
+            deposited_pennies  = 0
             
             # Retrieve user selection
             action = self.validate_user_action(amount_deposited, dispenser_message)     
