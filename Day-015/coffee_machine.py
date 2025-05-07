@@ -380,6 +380,12 @@ class coffee_machine:
                                                                     deposited_nickels, \
                                                                     deposited_pennies)
             
+            # Add all deposited funds to the cash bin
+            remaining_quarters += deposited_quarters
+            remaining_dimes += deposited_dimes
+            remaining_nickels += deposited_nickels
+            remaining_pennies += deposited_pennies
+            
             # Retrieve user selection
             action = self.validate_user_action(amount_deposited, dispenser_message)     
             
@@ -426,12 +432,6 @@ class coffee_machine:
                             remaining_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
                             remaining_milk -= menu[drink_ordered]["ingredients"]["milk"]
                             remaining_water -= menu[drink_ordered]["ingredients"]["water"]                            
-                        
-                            # Add all deposited funds to the cash bin
-                            remaining_quarters += deposited_quarters
-                            remaining_dimes += deposited_dimes
-                            remaining_nickels += deposited_nickels
-                            remaining_pennies += deposited_pennies
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
