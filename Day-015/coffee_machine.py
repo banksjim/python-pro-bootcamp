@@ -374,11 +374,7 @@ class coffee_machine:
             if (amount_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
                     amount_deposited, deposited_quarters, deposited_dimes, \
-                    deposited_nickels, deposited_pennies = self.deposit_currency(amount_deposited, \
-                                                                    deposited_quarters, \
-                                                                    deposited_dimes, \
-                                                                    deposited_nickels, \
-                                                                    deposited_pennies)           
+                    deposited_nickels, deposited_pennies = self.deposit_currency()           
 
             # Add all deposited funds to the cash bin
             remaining_quarters += deposited_quarters
