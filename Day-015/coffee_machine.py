@@ -55,7 +55,7 @@ class coffee_machine:
         return unfillable_order
 
     def deposit_coins(self):
-        """Handle machine currency deposits. """ \
+        """Handle machine coins deposits. """ \
         """Return the current deposit amount along with the number of coins deposited by type."""
         
         # Initialize deposit_currency() function variables
@@ -339,12 +339,12 @@ class coffee_machine:
 
         # Initialize main() variables
         action:                int = 0
-        amount_deposited:      float = 0.0
         refund_amount:         float = 0.0
         controlled_power_down: bool = False
         dispenser_message:     str = ''
         drink_ordered:         str = ''
         ingredient_shortage:   bool = False     
+        total_deposited:       float = 0.0
         
         # Variables to track ingredients in machine
         machine_coffee:        float = 0.0
@@ -381,9 +381,9 @@ class coffee_machine:
             # Accept coin deposits for purchase only if more funds are needed for an order and
             # no ingredient shortage for an order has been found
 
-            if (amount_deposited == 0) or (refund_amount < 0): # Check if more funds needed
+            if (total_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
-                    amount_deposited, deposited_quarters, deposited_dimes, \
+                    total_deposited, deposited_quarters, deposited_dimes, \
                     deposited_nickels, deposited_pennies = self.deposit_coins()           
 
             # Add all deposited funds to the cash bin
@@ -399,10 +399,10 @@ class coffee_machine:
             deposited_pennies  = 0
             
             # Retrieve user selection
-            action = self.validate_user_action(amount_deposited, dispenser_message)     
+            action = self.validate_user_action(total_deposited, dispenser_message)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
-            self.display_machine_options('', True, action, amount_deposited)
+            self.display_machine_options('', True, action, total_deposited)
             
             # Process machine request options               
             match action:
@@ -426,7 +426,7 @@ class coffee_machine:
                     if ingredient_shortage is False: # Machine has enough ingredients to fill order
                         
                         # Calculate amount owed or to be refunded
-                        refund_amount = amount_deposited - menu[drink_ordered]["cost"]
+                        refund_amount = total_deposited - menu[drink_ordered]["cost"]
                         
                         # Process order or request additional funds
                         if refund_amount >= 0.0: # Credit balance deposited
@@ -452,9 +452,9 @@ class coffee_machine:
                 # Handle refund change request
                 case 4:
                     # Refund deposited amounts by currency type
-                    amount_deposited, deposited_quarters, deposited_dimes, \
+                    total_deposited, deposited_quarters, deposited_dimes, \
                         deposited_nickels, deposited_pennies = \
-                            self.refund_change(amount_deposited, deposited_quarters, \
+                            self.refund_change(total_deposited, deposited_quarters, \
                                                deposited_dimes, deposited_nickels, \
                                                deposited_pennies)
                     
@@ -471,7 +471,7 @@ class coffee_machine:
                     
                 # Handle controlled power down
                 case 6:
-                    controlled_power_down = self.shutdown(amount_deposited, \
+                    controlled_power_down = self.shutdown(total_deposited, \
                                                           deposited_quarters, \
                                                           deposited_dimes, \
                                                           deposited_nickels, \
