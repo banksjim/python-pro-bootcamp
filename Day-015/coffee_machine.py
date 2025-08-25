@@ -54,9 +54,9 @@ class coffee_machine:
         
         return unfillable_order
 
-    def deposit_currency(self):
-        """Handle machine currency deposits. """ \
-        """Return the current deposit amount along with the number of coins deposited by type."""
+    def deposit_coins(self, total_deposited: float = 0.0):
+        """Handle machine coins deposits. """ \
+        """Return updated total deposit amount along with the total number of coins deposited by type."""
         
         # Initialize deposit_currency() function variables
         amount_deposited:   float = 0.0
@@ -338,39 +338,42 @@ class coffee_machine:
     def main(self): # Main app routine
 
         # Initialize main() variables
-        action:                int = 0
-        amount_deposited:      float = 0.0
-        refund_amount:         float = 0.0
-        controlled_power_down: bool = False
-        dispenser_message:     str = ''
-        drink_ordered:         str = ''
-        ingredient_shortage:   bool = False
+        action:                   int = 0
+        refund_amount:            float = 0.0
+        controlled_power_down:    bool = False
+        dispenser_message:        str = ''
+        drink_ordered:            str = ''
+        ingredient_shortage:      bool = False     
+        total_deposited:          float = 0.0
         
-        deposited_quarters:    int = 0
-        deposited_dimes:       int = 0
-        deposited_nickels:     int = 0
-        deposited_pennies:     int = 0
+        # Variables to track ingredients in machine
+        machine_coffee:           float = 0.0
+        machine_milk:             float = 0.0
+        machine_water:            float = 0.0
         
-        remaining_coffee:      float = 0.0
-        remaining_milk:        float = 0.0
-        remaining_water:       float = 0.0
+        # Variables to track coins in the machine cash bin
+        bin_quarters:             int = 0
+        bin_dimes:                int = 0
+        bin_nickels:              int = 0
+        bin_pennies:              int = 0
         
-        remaining_quarters:    int = 0
-        remaining_dimes:       int = 0
-        remaining_nickels:     int = 0
-        remaining_pennies:     int = 0
+        # Variables to track coins inserted at each purchase
+        total_deposited_quarters: int = 0
+        total_deposited_dimes:    int = 0
+        total_deposited_nickels:  int = 0
+        total_deposited_pennies:  int = 0
         
         # Main() logic
         
         # Load available resources from machine config
-        remaining_coffee   = resources["coffee"]
-        remaining_milk     = resources["milk"]
-        remaining_water    = resources["water"]
+        machine_coffee = resources["coffee"]
+        machine_milk   = resources["milk"]
+        machine_water  = resources["water"]
         
-        remaining_quarters = resources["USD_quarters"]
-        remaining_dimes    = resources["USD_dimes"]
-        remaining_nickels  = resources["USD_nickels"]
-        remaining_pennies  = resources["USD_pennies"]
+        bin_quarters = resources["USD_quarters"]
+        bin_dimes    = resources["USD_dimes"]
+        bin_nickels  = resources["USD_nickels"]
+        bin_pennies  = resources["USD_pennies"]
         
         # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
@@ -378,28 +381,28 @@ class coffee_machine:
             # Accept coin deposits for purchase only if more funds are needed for an order and
             # no ingredient shortage for an order has been found
 
-            if (amount_deposited == 0) or (refund_amount < 0): # Check if more funds needed
+            if (total_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
-                    amount_deposited, deposited_quarters, deposited_dimes, \
-                    deposited_nickels, deposited_pennies = self.deposit_currency()           
+                    total_deposited, total_deposited_quarters, total_deposited_dimes, \
+                    total_deposited_nickels, total_deposited_pennies = self.deposit_coins(total_deposited)           
 
             # Add all deposited funds to the cash bin
-            remaining_quarters += deposited_quarters
-            remaining_dimes    += deposited_dimes
-            remaining_nickels  += deposited_nickels
-            remaining_pennies  += deposited_pennies
+            bin_quarters += total_deposited_quarters
+            bin_dimes    += total_deposited_dimes
+            bin_nickels  += total_deposited_nickels
+            bin_pennies  += total_deposited_pennies
             
             # Reset deposited currencies
-            deposited_quarters = 0
-            deposited_dimes    = 0
-            deposited_nickels  = 0
-            deposited_pennies  = 0
+            total_deposited_quarters = 0
+            total_deposited_dimes    = 0
+            total_deposited_nickels  = 0
+            total_deposited_pennies  = 0
             
             # Retrieve user selection
-            action = self.validate_user_action(amount_deposited, dispenser_message)     
+            action = self.validate_user_action(total_deposited, dispenser_message)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
-            self.display_machine_options('', True, action, amount_deposited)
+            self.display_machine_options('', True, action, total_deposited)
             
             # Process machine request options               
             match action:
@@ -412,8 +415,8 @@ class coffee_machine:
                     
                     # Confirm that ingredients required are available and
                     # return ingredients that will be used if the order can be filled
-                    ingredient_shortage = self.check_ingredients(drink_ordered, remaining_coffee, \
-                                              remaining_milk, remaining_water)  
+                    ingredient_shortage = self.check_ingredients(drink_ordered, machine_coffee, \
+                                              machine_milk, machine_water)  
                         
                     # Clear the order dispenser message
                     dispenser_message = ''
@@ -423,7 +426,7 @@ class coffee_machine:
                     if ingredient_shortage is False: # Machine has enough ingredients to fill order
                         
                         # Calculate amount owed or to be refunded
-                        refund_amount = amount_deposited - menu[drink_ordered]["cost"]
+                        refund_amount = total_deposited - menu[drink_ordered]["cost"]
                         
                         # Process order or request additional funds
                         if refund_amount >= 0.0: # Credit balance deposited
@@ -436,11 +439,12 @@ class coffee_machine:
                                 dispenser_message += 'Thanks for using exact change.'
                             else:
                                 dispenser_message += f'Returning ${refund_amount:.2f}.'
+                                ### Refund change here
                         
                             # Update current machine resources
-                            remaining_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
-                            remaining_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            remaining_water -= menu[drink_ordered]["ingredients"]["water"]                            
+                            machine_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
+                            machine_milk -= menu[drink_ordered]["ingredients"]["milk"]
+                            machine_water -= menu[drink_ordered]["ingredients"]["water"]                            
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
@@ -448,11 +452,11 @@ class coffee_machine:
                 # Handle refund change request
                 case 4:
                     # Refund deposited amounts by currency type
-                    amount_deposited, deposited_quarters, deposited_dimes, \
-                        deposited_nickels, deposited_pennies = \
-                            self.refund_change(amount_deposited, deposited_quarters, \
-                                               deposited_dimes, deposited_nickels, \
-                                               deposited_pennies)
+                    total_deposited, total_deposited_quarters, total_deposited_dimes, \
+                        total_deposited_nickels, total_deposited_pennies = \
+                            self.refund_change(total_deposited, total_deposited_quarters, \
+                                               total_deposited_dimes, total_deposited_nickels, \
+                                               total_deposited_pennies)
                     
                     
                     
@@ -461,17 +465,17 @@ class coffee_machine:
                     
                 # Handle machine report request
                 case 5:
-                    self.report_resources(remaining_coffee, remaining_milk, remaining_water, \
-                                          remaining_quarters, remaining_dimes, remaining_nickels, \
-                                          remaining_pennies)                  
+                    self.report_resources(machine_coffee, machine_milk, machine_water, \
+                                          bin_quarters, bin_dimes, bin_nickels, \
+                                          bin_pennies)                  
                     
                 # Handle controlled power down
                 case 6:
-                    controlled_power_down = self.shutdown(amount_deposited, \
-                                                          deposited_quarters, \
-                                                          deposited_dimes, \
-                                                          deposited_nickels, \
-                                                          deposited_pennies)               
+                    controlled_power_down = self.shutdown(total_deposited, \
+                                                          total_deposited_quarters, \
+                                                          total_deposited_dimes, \
+                                                          total_deposited_nickels, \
+                                                          total_deposited_pennies)               
 
         return None
 
