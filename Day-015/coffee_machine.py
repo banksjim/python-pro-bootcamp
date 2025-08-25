@@ -344,33 +344,36 @@ class coffee_machine:
         controlled_power_down: bool = False
         dispenser_message:     str = ''
         drink_ordered:         str = ''
-        ingredient_shortage:   bool = False
+        ingredient_shortage:   bool = False     
         
+        # Variables to track ingredients in machine
+        machine_coffee:        float = 0.0
+        machine_milk:          float = 0.0
+        machine_water:         float = 0.0
+        
+        # Variables to track coins in the machine cash bin
+        bin_quarters:          int = 0
+        bin_dimes:             int = 0
+        bin_nickels:           int = 0
+        bin_pennies:           int = 0
+        
+        # Variables to track coins inserted at each purchase
         deposited_quarters:    int = 0
         deposited_dimes:       int = 0
         deposited_nickels:     int = 0
         deposited_pennies:     int = 0
         
-        remaining_coffee:      float = 0.0
-        remaining_milk:        float = 0.0
-        remaining_water:       float = 0.0
-        
-        remaining_quarters:    int = 0
-        remaining_dimes:       int = 0
-        remaining_nickels:     int = 0
-        remaining_pennies:     int = 0
-        
         # Main() logic
         
         # Load available resources from machine config
-        remaining_coffee   = resources["coffee"]
-        remaining_milk     = resources["milk"]
-        remaining_water    = resources["water"]
+        machine_coffee   = resources["coffee"]
+        machine_milk     = resources["milk"]
+        machine_water    = resources["water"]
         
-        remaining_quarters = resources["USD_quarters"]
-        remaining_dimes    = resources["USD_dimes"]
-        remaining_nickels  = resources["USD_nickels"]
-        remaining_pennies  = resources["USD_pennies"]
+        bin_quarters = resources["USD_quarters"]
+        bin_dimes    = resources["USD_dimes"]
+        bin_nickels  = resources["USD_nickels"]
+        bin_pennies  = resources["USD_pennies"]
         
         # Accept user requests until powered down
         while controlled_power_down is False: # Continuously operate while power is on      
@@ -384,10 +387,10 @@ class coffee_machine:
                     deposited_nickels, deposited_pennies = self.deposit_currency()           
 
             # Add all deposited funds to the cash bin
-            remaining_quarters += deposited_quarters
-            remaining_dimes    += deposited_dimes
-            remaining_nickels  += deposited_nickels
-            remaining_pennies  += deposited_pennies
+            bin_quarters += deposited_quarters
+            bin_dimes    += deposited_dimes
+            bin_nickels  += deposited_nickels
+            bin_pennies  += deposited_pennies
             
             # Reset deposited currencies
             deposited_quarters = 0
@@ -412,8 +415,8 @@ class coffee_machine:
                     
                     # Confirm that ingredients required are available and
                     # return ingredients that will be used if the order can be filled
-                    ingredient_shortage = self.check_ingredients(drink_ordered, remaining_coffee, \
-                                              remaining_milk, remaining_water)  
+                    ingredient_shortage = self.check_ingredients(drink_ordered, machine_coffee, \
+                                              machine_milk, machine_water)  
                         
                     # Clear the order dispenser message
                     dispenser_message = ''
@@ -436,11 +439,12 @@ class coffee_machine:
                                 dispenser_message += 'Thanks for using exact change.'
                             else:
                                 dispenser_message += f'Returning ${refund_amount:.2f}.'
+                                ### Refund change here
                         
                             # Update current machine resources
-                            remaining_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
-                            remaining_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            remaining_water -= menu[drink_ordered]["ingredients"]["water"]                            
+                            machine_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
+                            machine_milk -= menu[drink_ordered]["ingredients"]["milk"]
+                            machine_water -= menu[drink_ordered]["ingredients"]["water"]                            
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
@@ -461,9 +465,9 @@ class coffee_machine:
                     
                 # Handle machine report request
                 case 5:
-                    self.report_resources(remaining_coffee, remaining_milk, remaining_water, \
-                                          remaining_quarters, remaining_dimes, remaining_nickels, \
-                                          remaining_pennies)                  
+                    self.report_resources(machine_coffee, machine_milk, machine_water, \
+                                          bin_quarters, bin_dimes, bin_nickels, \
+                                          bin_pennies)                  
                     
                 # Handle controlled power down
                 case 6:
