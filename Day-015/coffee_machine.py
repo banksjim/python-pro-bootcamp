@@ -366,9 +366,9 @@ class coffee_machine:
         # Main() logic
         
         # Load available resources from machine config
-        machine_coffee   = resources["coffee"]
-        machine_milk     = resources["milk"]
-        machine_water    = resources["water"]
+        machine_coffee = resources["coffee"]
+        machine_milk   = resources["milk"]
+        machine_water  = resources["water"]
         
         bin_quarters = resources["USD_quarters"]
         bin_dimes    = resources["USD_dimes"]
