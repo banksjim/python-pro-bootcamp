@@ -54,7 +54,7 @@ class coffee_machine:
         
         return unfillable_order
 
-    def deposit_currency(self):
+    def deposit_coins(self):
         """Handle machine currency deposits. """ \
         """Return the current deposit amount along with the number of coins deposited by type."""
         
@@ -384,7 +384,7 @@ class coffee_machine:
             if (amount_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
                     amount_deposited, deposited_quarters, deposited_dimes, \
-                    deposited_nickels, deposited_pennies = self.deposit_currency()           
+                    deposited_nickels, deposited_pennies = self.deposit_coins()           
 
             # Add all deposited funds to the cash bin
             bin_quarters += deposited_quarters
