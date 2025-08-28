@@ -84,15 +84,8 @@ class coffee_machine:
         amount_deposited += quarters_deposited * resources["USD_quarters_value"]
         amount_deposited += dimes_deposited    * resources["USD_dimes_value"]
         amount_deposited += nickels_deposited  * resources["USD_nickels_value"]
-        amount_deposited += pennies_deposited  * resources["USD_pennies_value"]
-        
-        #HERE -> Create this new function
-        # Update currency types in cash bin
-        update_cash_bin('add', quarters_deposited, dimes_deposited \
-                             nickels_deposited, pennies_deposited)
-        
-        return amount_deposited, quarters_deposited, dimes_deposited, \
-            nickels_deposited, pennies_deposited
+        amount_deposited += pennies_deposited  * resources["USD_pennies_value"]      
+
 
     def display_machine_options(self, menu_selection_message: str = '', \
                                 read_only: bool = False, \
@@ -289,9 +282,7 @@ class coffee_machine:
         total_currency += pennies * resources["USD_pennies_value"] # Add total for all pennies
     
         return total_currency
-
-    def update_cash_bin(self, action: str = '',  )
-
+ 
     def validate_user_action(self, total_deposited: float = 0.0, \
                                    dispenser_message: str = ''):
         """Accept and valid requested user action. """ \
