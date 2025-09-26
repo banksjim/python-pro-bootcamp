@@ -378,13 +378,13 @@ class coffee_machine:
                     total_deposited, deposited_quarters, deposited_dimes, \
                     deposited_nickels, deposited_pennies = self.deposit_coins(total_deposited)           
 
-            # Add all deposited funds to the cash bin
+            # Add deposited coins to the cash bin
             bin_quarters += deposited_quarters
             bin_dimes    += deposited_dimes
             bin_nickels  += deposited_nickels
             bin_pennies  += deposited_pennies
             
-            # Reset deposited currencies
+            # Reset deposited coins from previous deposit
             deposited_quarters = 0
             deposited_dimes    = 0
             deposited_nickels  = 0
