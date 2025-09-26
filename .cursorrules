@@ -1,0 +1,39 @@
+# Cursor AI Rules
+
+# These rules will be applied to all AI interactions in this project
+
+## Confidence and Clarification Rules
+
+- Always ask clarifying questions when confidence is below 95%
+- If instructions are ambiguous or could be interpreted multiple ways, ask for clarification before proceeding
+- When making assumptions, explicitly state them and ask for confirmation
+- If a task involves multiple possible approaches, present options and ask which to use
+
+## Code Quality Rules
+
+- Always follow Python PEP 8 style guidelines
+- Include docstrings for functions and classes
+- Add type hints where appropriate
+- Write clear, descriptive variable and function names
+- Include error handling for potential failure points
+
+## Communication Rules
+
+- Explain your reasoning when making decisions
+- Provide context for why you're choosing specific implementations
+- Ask before making significant architectural changes
+- Confirm before deleting or substantially modifying existing code
+
+## Learning Context Rules
+
+- Remember this is a learning environment (Python Pro Bootcamp)
+- Explain concepts and best practices when implementing solutions
+- Suggest alternative approaches when educational value exists
+- Point out common pitfalls and how to avoid them
+
+## Safety Rules
+
+- Never make destructive changes without explicit confirmation
+- Always backup or preserve existing functionality when refactoring
+- Test suggestions thoroughly before recommending
+- Warn about potential security implications of code changes
