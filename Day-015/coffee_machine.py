@@ -55,23 +55,22 @@ class coffee_machine:
         return unfillable_order
 
     def deposit_coins(self, total_deposited: float = 0.0):
-        """Handle machine coins deposits. """ \
-        """Return updated total deposit amount along with the total number of coins deposited by type."""
+        """Accept coin deposits by the user. """ \
+        """Return updated total deposited amount number of coins deposited by currency type."""
         
         # Initialize deposit_currency() function variables
-        amount_deposited:   float = 0.0
         quarters_deposited: int = 0
         dimes_deposited:    int = 0
         nickels_deposited:  int = 0
         pennies_deposited:  int = 0
                
-        # Clear terminal screen if used
+        # Clear terminal screen
         clear_terminal()
         
-        # Show current deposited amount
+        # Show current total deposited amount
         print(f'Total deposited: ${total_deposited:0.2f}\n')
         
-        # Accept coin deposits for purchase
+        # Accept coin deposits
         print('Insert coins...\n')               
         
         # Accept and count coins for supported currency types
@@ -81,11 +80,13 @@ class coffee_machine:
         pennies_deposited  += self.get_coins('pennies')
                
         # Calculate the amount deposited based on the coins inserted        
-        amount_deposited += quarters_deposited * resources["USD_quarters_value"]
-        amount_deposited += dimes_deposited    * resources["USD_dimes_value"]
-        amount_deposited += nickels_deposited  * resources["USD_nickels_value"]
-        amount_deposited += pennies_deposited  * resources["USD_pennies_value"]      
-
+        total_deposited += quarters_deposited * resources["USD_quarters_value"]
+        total_deposited += dimes_deposited    * resources["USD_dimes_value"]
+        total_deposited += nickels_deposited  * resources["USD_nickels_value"]
+        total_deposited += pennies_deposited  * resources["USD_pennies_value"]      
+        
+        return total_deposited, quarters_deposited, dimes_deposited, \
+                                nickels_deposited, pennies_deposited
 
     def display_machine_options(self, menu_selection_message: str = '', \
                                 read_only: bool = False, \
@@ -130,7 +131,7 @@ class coffee_machine:
 
     def get_coins(self, currency_unit: str = ''):
         """Input number of coins for requested current type. """ \
-        """Return number of coins input for the currency type requested."""
+        """Return number of coins deposited by currency type."""
     
         # Initialize get_coins() function variables
         coin_count:         int = 0
@@ -141,7 +142,7 @@ class coffee_machine:
         while valid_coin_deposit is False:
         
             # Fetch currency type from coin_slot
-            coin_slot_counter = input(f'Number of {currency_unit}: ')
+            coin_slot_counter = input(f'Number of {currency_unit} inserted: ')
             
             # Validate that the coin slot returned numeric count of the coin type
             if coin_slot_counter.isdigit():
@@ -329,30 +330,30 @@ class coffee_machine:
     def main(self): # Main app routine
 
         # Initialize main() variables
-        action:                   int = 0
-        refund_amount:            float = 0.0
-        controlled_power_down:    bool = False
-        dispenser_message:        str = ''
-        drink_ordered:            str = ''
-        ingredient_shortage:      bool = False     
-        total_deposited:          float = 0.0
+        action:                int = 0
+        refund_amount:         float = 0.0
+        controlled_power_down: bool = False
+        dispenser_message:     str = ''
+        drink_ordered:         str = ''
+        ingredient_shortage:   bool = False     
+        total_deposited:       float = 0.0
         
         # Variables to track ingredients in machine
-        machine_coffee:           float = 0.0
-        machine_milk:             float = 0.0
-        machine_water:            float = 0.0
+        machine_coffee:        float = 0.0
+        machine_milk:          float = 0.0
+        machine_water:         float = 0.0
         
         # Variables to track coins in the machine cash bin
-        bin_quarters:             int = 0
-        bin_dimes:                int = 0
-        bin_nickels:              int = 0
-        bin_pennies:              int = 0
+        bin_quarters:          int = 0
+        bin_dimes:             int = 0
+        bin_nickels:           int = 0
+        bin_pennies:           int = 0
         
-        # Variables to track coins inserted at each purchase
-        total_deposited_quarters: int = 0
-        total_deposited_dimes:    int = 0
-        total_deposited_nickels:  int = 0
-        total_deposited_pennies:  int = 0
+        # Variables to track coins inserted for purchase
+        deposited_quarters:    int = 0
+        deposited_dimes:       int = 0
+        deposited_nickels:     int = 0
+        deposited_pennies:     int = 0
         
         # Main() logic
         
@@ -374,20 +375,20 @@ class coffee_machine:
 
             if (total_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
-                    total_deposited, total_deposited_quarters, total_deposited_dimes, \
-                    total_deposited_nickels, total_deposited_pennies = self.deposit_coins(total_deposited)           
+                    total_deposited, deposited_quarters, deposited_dimes, \
+                    deposited_nickels, deposited_pennies = self.deposit_coins(total_deposited)           
 
-            # Add all deposited funds to the cash bin
-            bin_quarters += total_deposited_quarters
-            bin_dimes    += total_deposited_dimes
-            bin_nickels  += total_deposited_nickels
-            bin_pennies  += total_deposited_pennies
+            # Add deposited coins to the cash bin
+            bin_quarters += deposited_quarters
+            bin_dimes    += deposited_dimes
+            bin_nickels  += deposited_nickels
+            bin_pennies  += deposited_pennies
             
-            # Reset deposited currencies
-            total_deposited_quarters = 0
-            total_deposited_dimes    = 0
-            total_deposited_nickels  = 0
-            total_deposited_pennies  = 0
+            # Reset deposited coins from previous deposit
+            deposited_quarters = 0
+            deposited_dimes    = 0
+            deposited_nickels  = 0
+            deposited_pennies  = 0
             
             # Retrieve user selection
             action = self.validate_user_action(total_deposited, dispenser_message)     
@@ -443,11 +444,11 @@ class coffee_machine:
                 # Handle refund change request
                 case 4:
                     # Refund deposited amounts by currency type
-                    total_deposited, total_deposited_quarters, total_deposited_dimes, \
-                        total_deposited_nickels, total_deposited_pennies = \
-                            self.refund_change(total_deposited, total_deposited_quarters, \
-                                               total_deposited_dimes, total_deposited_nickels, \
-                                               total_deposited_pennies)
+                    total_deposited, deposited_quarters, deposited_dimes, \
+                        deposited_nickels, deposited_pennies = \
+                            self.refund_change(total_deposited, deposited_quarters, \
+                                               deposited_dimes, deposited_nickels, \
+                                               deposited_pennies)
                     
                     
                     
@@ -463,10 +464,10 @@ class coffee_machine:
                 # Handle controlled power down
                 case 6:
                     controlled_power_down = self.shutdown(total_deposited, \
-                                                          total_deposited_quarters, \
-                                                          total_deposited_dimes, \
-                                                          total_deposited_nickels, \
-                                                          total_deposited_pennies)               
+                                                          deposited_quarters, \
+                                                          deposited_dimes, \
+                                                          deposited_nickels, \
+                                                          deposited_pennies)               
 
         return None
 
