@@ -329,30 +329,30 @@ class coffee_machine:
     def main(self): # Main app routine
 
         # Initialize main() variables
-        action:                   int = 0
-        refund_amount:            float = 0.0
-        controlled_power_down:    bool = False
-        dispenser_message:        str = ''
-        drink_ordered:            str = ''
-        ingredient_shortage:      bool = False     
-        total_deposited:          float = 0.0
+        action:                int = 0
+        refund_amount:         float = 0.0
+        controlled_power_down: bool = False
+        dispenser_message:     str = ''
+        drink_ordered:         str = ''
+        ingredient_shortage:   bool = False     
+        total_deposited:       float = 0.0
         
         # Variables to track ingredients in machine
-        machine_coffee:           float = 0.0
-        machine_milk:             float = 0.0
-        machine_water:            float = 0.0
+        machine_coffee:        float = 0.0
+        machine_milk:          float = 0.0
+        machine_water:         float = 0.0
         
         # Variables to track coins in the machine cash bin
-        bin_quarters:             int = 0
-        bin_dimes:                int = 0
-        bin_nickels:              int = 0
-        bin_pennies:              int = 0
+        bin_quarters:          int = 0
+        bin_dimes:             int = 0
+        bin_nickels:           int = 0
+        bin_pennies:           int = 0
         
         # Variables to track coins inserted for purchase
-        deposited_quarters: int = 0
-        deposited_dimes:    int = 0
-        deposited_nickels:  int = 0
-        deposited_pennies:  int = 0
+        deposited_quarters:    int = 0
+        deposited_dimes:       int = 0
+        deposited_nickels:     int = 0
+        deposited_pennies:     int = 0
         
         # Main() logic
         
