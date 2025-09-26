@@ -55,23 +55,22 @@ class coffee_machine:
         return unfillable_order
 
     def deposit_coins(self, total_deposited: float = 0.0):
-        """Handle machine coins deposits. """ \
-        """Return updated total deposit amount along with the total number of coins deposited by type."""
+        """Accept coin deposits by the user. """ \
+        """Return updated total deposited amount number of coins deposited by currency type."""
         
         # Initialize deposit_currency() function variables
-        amount_deposited:   float = 0.0
         quarters_deposited: int = 0
         dimes_deposited:    int = 0
         nickels_deposited:  int = 0
         pennies_deposited:  int = 0
                
-        # Clear terminal screen if used
+        # Clear terminal screen
         clear_terminal()
         
-        # Show current deposited amount
+        # Show current total deposited amount
         print(f'Total deposited: ${total_deposited:0.2f}\n')
         
-        # Accept coin deposits for purchase
+        # Accept coin deposits
         print('Insert coins...\n')               
         
         # Accept and count coins for supported currency types
@@ -81,11 +80,13 @@ class coffee_machine:
         pennies_deposited  += self.get_coins('pennies')
                
         # Calculate the amount deposited based on the coins inserted        
-        amount_deposited += quarters_deposited * resources["USD_quarters_value"]
-        amount_deposited += dimes_deposited    * resources["USD_dimes_value"]
-        amount_deposited += nickels_deposited  * resources["USD_nickels_value"]
-        amount_deposited += pennies_deposited  * resources["USD_pennies_value"]      
-
+        total_deposited += quarters_deposited * resources["USD_quarters_value"]
+        total_deposited += dimes_deposited    * resources["USD_dimes_value"]
+        total_deposited += nickels_deposited  * resources["USD_nickels_value"]
+        total_deposited += pennies_deposited  * resources["USD_pennies_value"]      
+        
+        return total_deposited, quarters_deposited, dimes_deposited, \
+                                nickels_deposited, pennies_deposited
 
     def display_machine_options(self, menu_selection_message: str = '', \
                                 read_only: bool = False, \
@@ -130,7 +131,7 @@ class coffee_machine:
 
     def get_coins(self, currency_unit: str = ''):
         """Input number of coins for requested current type. """ \
-        """Return number of coins input for the currency type requested."""
+        """Return number of coins deposited by currency type."""
     
         # Initialize get_coins() function variables
         coin_count:         int = 0
@@ -141,7 +142,7 @@ class coffee_machine:
         while valid_coin_deposit is False:
         
             # Fetch currency type from coin_slot
-            coin_slot_counter = input(f'Number of {currency_unit}: ')
+            coin_slot_counter = input(f'Number of {currency_unit} inserted: ')
             
             # Validate that the coin slot returned numeric count of the coin type
             if coin_slot_counter.isdigit():
