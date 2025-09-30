@@ -284,7 +284,7 @@ class coffee_machine:
     
         return total_currency
  
-    def validate_user_action(self, total_deposited: float = 0.0, \
+    def handle_user_selection(self, total_deposited: float = 0.0, \
                                    dispenser_message: str = ''):
         """Accept and valid requested user action. """ \
         """Return a valid action option.""" \
@@ -391,7 +391,7 @@ class coffee_machine:
             deposited_pennies  = 0
             
             # Retrieve user selection
-            action = self.validate_user_action(total_deposited, dispenser_message)     
+            action = self.handle_user_selection(total_deposited, dispenser_message)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
             self.display_machine_options('', True, action, total_deposited)
