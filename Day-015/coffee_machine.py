@@ -436,7 +436,11 @@ class coffee_machine:
                             # Update current machine resources
                             machine_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
                             machine_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            machine_water -= menu[drink_ordered]["ingredients"]["water"]                            
+                            machine_water -= menu[drink_ordered]["ingredients"]["water"]   
+                        
+                        else:
+                            
+                            dispenser_message = f'Deposit an additional ${abs(refund_amount):.2f}'                         
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
