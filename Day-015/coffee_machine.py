@@ -1,5 +1,6 @@
 # Coffee machine - Simulation of the software required to operate a coffee dispenser machine
 
+import dis
 from coffee_machine_config_data import menu, resources
 from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
@@ -380,8 +381,13 @@ class coffee_machine:
 
             if (total_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
-                    total_deposited, deposited_quarters, deposited_dimes, \
-                    deposited_nickels, deposited_pennies = self.deposit_coins(total_deposited, dispenser_message) # Add dispenser message to the deposit_coins() function        
+                    
+                    total_deposited, deposited_quarters, \
+                    deposited_dimes, deposited_nickels, \
+                    deposited_pennies = self.deposit_coins(total_deposited, dispenser_message)
+
+            # Clear any previous dispenser messages
+            dispenser_message = ''
 
             # Add deposited coins to the cash bin
             bin_quarters += deposited_quarters
@@ -414,10 +420,7 @@ class coffee_machine:
                     # return ingredients that will be used if the order can be filled
                     ingredient_shortage = self.check_ingredients(drink_ordered, machine_coffee, \
                                               machine_milk, machine_water)  
-                        
-                    # Clear the order dispenser message
-                    dispenser_message = ''
-                    
+                                           
                     # If enough machine ingredients then continue to try to fill order
                     # else inform user the drink is temporarily unavailable 
                     if ingredient_shortage is False: # Machine has enough ingredients to fill order
