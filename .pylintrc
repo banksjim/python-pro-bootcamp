@@ -7,3 +7,6 @@ disable=
     C0303, # trailing whitespace
     C0415, # Import outside toplevel
     E0401  # Unable to import
+
+[FORMAT]
+max-line-length=120
