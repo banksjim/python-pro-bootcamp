@@ -1,6 +1,5 @@
 # Coffee machine - Simulation of the software required to operate a coffee dispenser machine
 
-import dis
 from coffee_machine_config_data import menu, resources
 from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
 
