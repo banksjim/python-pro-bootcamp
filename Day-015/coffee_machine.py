@@ -54,7 +54,7 @@ class coffee_machine:
         
         return unfillable_order
 
-    def deposit_coins(self, total_deposited: float = 0.0):
+    def deposit_coins(self, total_deposited: float = 0.0, dispenser_message: str = ''):
         """Accept coin deposits by the user. """ \
         """Return updated total deposited amount number of coins deposited by currency type."""
         
@@ -66,9 +66,13 @@ class coffee_machine:
                
         # Clear terminal screen
         clear_terminal()
-        
-        # Show current total deposited amount
+                      
+        # Show total deposited
         print(f'Total deposited: ${total_deposited:0.2f}\n')
+        
+        # Show total deposited and dispenser message if not blank
+        if dispenser_message != '':
+            print(f'{dispenser_message}\n')
         
         # Accept coin deposits
         print('Insert coins...\n')               
@@ -253,6 +257,7 @@ class coffee_machine:
                 valid_confirmation_request = True
                 
                 # Refund any deposited coins that were not used
+                # TODO: Complete refund display logic during shutdown 
                 if amount_deposited > 0:
                     self.refund_change(amount_deposited, deposited_quarters, \
                                        deposited_dimes, deposited_nickels, \
@@ -376,7 +381,7 @@ class coffee_machine:
             if (total_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
                     total_deposited, deposited_quarters, deposited_dimes, \
-                    deposited_nickels, deposited_pennies = self.deposit_coins(total_deposited)           
+                    deposited_nickels, deposited_pennies = self.deposit_coins(total_deposited, dispenser_message) # Add dispenser message to the deposit_coins() function        
 
             # Add deposited coins to the cash bin
             bin_quarters += deposited_quarters
@@ -436,11 +441,11 @@ class coffee_machine:
                             # Update current machine resources
                             machine_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
                             machine_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            machine_water -= menu[drink_ordered]["ingredients"]["water"]   
+                            machine_water -= menu[drink_ordered]["ingredients"]["water"]
                         
                         else:
                             
-                            dispenser_message = f'Deposit an additional ${abs(refund_amount):.2f}'                         
+                            dispenser_message = f'Additional ${abs(refund_amount):.2f} needed for {drink_ordered}'                         
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
