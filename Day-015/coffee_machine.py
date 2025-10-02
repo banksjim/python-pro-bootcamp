@@ -54,7 +54,7 @@ class coffee_machine:
         
         return unfillable_order
 
-    def deposit_coins(self, total_deposited: float = 0.0):
+    def deposit_coins(self, total_deposited: float = 0.0, dispenser_message: str = ''):
         """Accept coin deposits by the user. """ \
         """Return updated total deposited amount number of coins deposited by currency type."""
         
@@ -66,9 +66,13 @@ class coffee_machine:
                
         # Clear terminal screen
         clear_terminal()
-        
-        # Show current total deposited amount
+                      
+        # Show total deposited
         print(f'Total deposited: ${total_deposited:0.2f}\n')
+        
+        # Show dispenser message if not blank
+        if dispenser_message != '':
+            print(f'{dispenser_message}\n')
         
         # Accept coin deposits
         print('Insert coins...\n')               
@@ -169,6 +173,42 @@ class coffee_machine:
     
         return drink_name
 
+    def menu_selection(self, total_deposited: float = 0.0, \
+                                    dispenser_message: str = ''):
+        """Accept and valid requested user action. """ \
+        """Return a valid action option.""" \
+        """Receive and pass along the current total deposited amount."""
+        
+        # Initialize valid_user_action() variables
+        valid_selection:          bool = False
+        requested_action:         str = ''
+        requested_action_message: str = ''
+        validated_action:         int = 0
+        
+        while valid_selection is False: # Loop until a valid user action is input
+               
+            # Display available coffee machine options
+            requested_action = self.display_machine_options(requested_action_message, \
+                                                            False, 0, total_deposited)
+                   
+            # Validate that requested action is numeric
+            if requested_action.isdigit():
+                
+                # validate that requested action is in the valid range
+                if int(requested_action) in range(1, 7):
+                    validated_action = int(requested_action)
+                    requested_action_message = ''
+                    valid_selection = True
+                else:
+                    requested_action_message = 'Error: Request not in valid range'
+                    valid_selection = False
+                
+            else:
+                requested_action_message = 'Error: Request must be numeric'
+                valid_selection = False          
+            
+        return validated_action
+
     def refund_change(self, amount: float = 0.0, \
                             deposited_quarters: int = 0, \
                             deposited_dimes: int = 0, \
@@ -253,6 +293,7 @@ class coffee_machine:
                 valid_confirmation_request = True
                 
                 # Refund any deposited coins that were not used
+                # TODO: Complete refund display logic during shutdown 
                 if amount_deposited > 0:
                     self.refund_change(amount_deposited, deposited_quarters, \
                                        deposited_dimes, deposited_nickels, \
@@ -284,49 +325,6 @@ class coffee_machine:
     
         return total_currency
  
-    def validate_user_action(self, total_deposited: float = 0.0, \
-                                   dispenser_message: str = ''):
-        """Accept and valid requested user action. """ \
-        """Return a valid action option.""" \
-        """Receive and pass along the current total deposited amount."""
-        
-        # Initialize valid_user_action() variables
-        valid_selection:          bool = False
-        requested_action:         str = ''
-        requested_action_message: str = ''
-        validated_action:         int = 0
-        
-        while valid_selection is False: # Loop until a valid user action is input
-        
-            # Initialize requested action message to the dispenser message if provided
-            if dispenser_message:
-                requested_action_message = dispenser_message
-        
-            # Display available coffee machine options
-            requested_action = self.display_machine_options(requested_action_message, \
-                                                            False, 0, total_deposited)
-            
-            # Clear any previous dispenser or error message
-            dispenser_message = ''
-            requested_action_message = ''
-                   
-            # Validate that requested action is numeric
-            if requested_action.isdigit():
-                
-                # validate that requested action is in the valid range
-                if int(requested_action) in range(1, 7):
-                    validated_action = int(requested_action)
-                    valid_selection = True
-                else:
-                    requested_action_message = 'Error: Request not in valid range'
-                    valid_selection = False
-                
-            else:
-                requested_action_message = 'Error: Request must be numeric'
-                valid_selection = False          
-            
-        return validated_action
-
     def main(self): # Main app routine
 
         # Initialize main() variables
@@ -355,6 +353,12 @@ class coffee_machine:
         deposited_nickels:     int = 0
         deposited_pennies:     int = 0
         
+        # Variables to track refunded coin quantities
+        refunded_quarters:     int = 0
+        refunded_dimes:        int = 0
+        refunded_nickels:      int = 0
+        refunded_pennies:      int = 0
+         
         # Main() logic
         
         # Load available resources from machine config
@@ -375,8 +379,10 @@ class coffee_machine:
 
             if (total_deposited == 0) or (refund_amount < 0): # Check if more funds needed
                 if ingredient_shortage is False: # And no ingredient shortages
-                    total_deposited, deposited_quarters, deposited_dimes, \
-                    deposited_nickels, deposited_pennies = self.deposit_coins(total_deposited)           
+                    
+                    total_deposited, deposited_quarters, \
+                    deposited_dimes, deposited_nickels, \
+                    deposited_pennies = self.deposit_coins(total_deposited, dispenser_message)
 
             # Add deposited coins to the cash bin
             bin_quarters += deposited_quarters
@@ -391,17 +397,20 @@ class coffee_machine:
             deposited_pennies  = 0
             
             # Retrieve user selection
-            action = self.validate_user_action(total_deposited, dispenser_message)     
+            action = self.menu_selection(total_deposited, dispenser_message)     
             
             # Redisplay the menu screen read-only and clear any previous errors 
             self.display_machine_options('', True, action, total_deposited)
+
+            # Reset dispenser message
+            dispenser_message = ''
             
             # Process machine request options               
             match action:
                 
                 # Handle drink order request
                 case 1 | 2 | 3:
-                    
+                                        
                     # Set the name of the drink ordered
                     drink_ordered = self.get_drink_description(action)
                     
@@ -409,10 +418,7 @@ class coffee_machine:
                     # return ingredients that will be used if the order can be filled
                     ingredient_shortage = self.check_ingredients(drink_ordered, machine_coffee, \
                                               machine_milk, machine_water)  
-                        
-                    # Clear the order dispenser message
-                    dispenser_message = ''
-                    
+                                           
                     # If enough machine ingredients then continue to try to fill order
                     # else inform user the drink is temporarily unavailable 
                     if ingredient_shortage is False: # Machine has enough ingredients to fill order
@@ -436,20 +442,30 @@ class coffee_machine:
                             # Update current machine resources
                             machine_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
                             machine_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            machine_water -= menu[drink_ordered]["ingredients"]["water"]                            
+                            machine_water -= menu[drink_ordered]["ingredients"]["water"]
+                        
+                            # Clear total deposited
+                            total_deposited = 0
+                            
+                        else:
+                            dispenser_message = f'Additional ${abs(refund_amount):.2f} needed for {drink_ordered}'                         
                             
                     else:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
                     
                 # Handle refund change request
+                # TODO: Continue handling refunds
                 case 4:
                     # Refund deposited amounts by currency type
-                    total_deposited, deposited_quarters, deposited_dimes, \
-                        deposited_nickels, deposited_pennies = \
-                            self.refund_change(total_deposited, deposited_quarters, \
-                                               deposited_dimes, deposited_nickels, \
-                                               deposited_pennies)
+                    refunded_quarters, refunded_dimes, \
+                        refunded_nickels, refunded_pennies = \
+                            self.refund_change(total_deposited, refund_amount)
                     
+                    # Reset refunded coin amounts
+                    refunded_quarters = 0
+                    refunded_dimes    = 0
+                    refunded_nickels  = 0
+                    refunded_pennies  = 0
                     
                     
                     # Press any key to continue
