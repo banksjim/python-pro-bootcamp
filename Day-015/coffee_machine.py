@@ -353,6 +353,12 @@ class coffee_machine:
         deposited_nickels:     int = 0
         deposited_pennies:     int = 0
         
+        # Variables to track refunded coin quantities
+        refunded_quarters:     int = 0
+        refunded_dimes:        int = 0
+        refunded_nickels:      int = 0
+        refunded_pennies:      int = 0
+         
         # Main() logic
         
         # Load available resources from machine config
@@ -448,14 +454,18 @@ class coffee_machine:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
                     
                 # Handle refund change request
+                # TODO: Continue handling refunds
                 case 4:
                     # Refund deposited amounts by currency type
-                    total_deposited, deposited_quarters, deposited_dimes, \
-                        deposited_nickels, deposited_pennies = \
-                            self.refund_change(total_deposited, deposited_quarters, \
-                                               deposited_dimes, deposited_nickels, \
-                                               deposited_pennies)
+                    refunded_quarters, refunded_dimes, \
+                        refunded_nickels, refunded_pennies = \
+                            self.refund_change(total_deposited, refund_amount)
                     
+                    # Reset refunded coin amounts
+                    refunded_quarters = 0
+                    refunded_dimes    = 0
+                    refunded_nickels  = 0
+                    refunded_pennies  = 0
                     
                     
                     # Press any key to continue
