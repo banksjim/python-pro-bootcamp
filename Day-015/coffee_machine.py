@@ -1,4 +1,5 @@
 # Coffee machine - Simulation of the software required to operate a coffee dispenser machine
+import math
 
 from coffee_machine_config_data import menu, resources
 from shared_modules.system_modules import clear_terminal, press_any_key_to_continue
@@ -210,31 +211,91 @@ class coffee_machine:
         return validated_action
 
     def refund_change(self, amount: float = 0.0, \
-                            deposited_quarters: int = 0, \
-                            deposited_dimes: int = 0, \
-                            deposited_nickels: int = 0, \
-                            deposited_pennies: int = 0):
-        """Handle refund of unused coin deposits.""" \
-        """Accept in the current total deposit amount and number of coins by currency type. """ \
-        """Return a zeroed out total deposit value."""
+                            bin_quarters: int = 0, \
+                            bin_dimes: int = 0, \
+                            bin_nickels: int = 0, \
+                            bin_pennies: int = 0):
+        """Calculate and display refunded coin amounts.""" \
+        """Accept either current refund or total deposit amount and current bin coin counts """ \
+        """then calculate the refund amount in coins.""" \
+        """Return counts of each refunded coin type ."""
         
-        # Show user any refunded coin deposits with total returned
+        # Initialize refund_change() variables
+        cash_bin_error:    bool = False
+        coins_requested:   int = 0
+        refunded_quarters: int = 0
+        refunded_dimes:    int = 0
+        refunded_nickels:  int = 0
+        refunded_pennies:  int = 0
+   
+        # Show user their total expected refund amount
         print(f'\nRefund amount ${amount:0.2f}')
         print('-------------------------')
-        print(f'- Number of quarters: {deposited_quarters}')
-        print(f'- Number of dimes:    {deposited_dimes}')
-        print(f'- Number of nickels:  {deposited_nickels}')
-        print(f'- Number of pennies:  {deposited_pennies}')
         
-        # Zero out total deposited and coin counts
-        amount             = 0
-        deposited_quarters = 0
-        deposited_dimes    = 0
-        deposited_nickels  = 0
-        deposited_pennies  = 0        
+        # Calculate refunded coin amounts
+        # Quarters
+        coins_requested = int(amount / resources["USD_quarters_value"])
         
-        return amount, deposited_quarters, deposited_dimes, \
-                       deposited_nickels, deposited_pennies
+        if coins_requested > 0:
+            if coins_requested <= bin_quarters:
+                refunded_quarters = coins_requested # Take needed quarters from bin
+            else:
+                refunded_quarters = bin_quarters # Take remaining quarters from bin
+            
+        amount = round(amount - (refunded_quarters * resources["USD_quarters_value"]), 2)
+        
+        # Dimes
+        coins_requested = int(amount / resources["USD_dimes_value"])
+
+        if coins_requested > 0:
+            if coins_requested <= bin_dimes:
+                refunded_dimes = coins_requested # Take needed dimes from bin
+            else:
+                refunded_dimes = bin_dimes # Take remaining dimes from bin
+            
+        amount = round(amount - (refunded_dimes * resources["USD_dimes_value"]), 2)
+        
+        # Nickels
+        coins_requested = int(amount / resources["USD_nickels_value"])
+        
+        if coins_requested > 0:
+            if coins_requested <= bin_nickels:
+                refunded_nickels = coins_requested # Take needed nickels from bin
+            else:
+                refunded_nickels = bin_nickels # Take remaining nickels from bin
+            
+        amount = round(amount - (refunded_nickels * resources["USD_nickels_value"]), 2)
+        
+        # Pennies
+        coins_requested = int(amount / resources["USD_pennies_value"])
+        
+        if coins_requested > 0:
+            if coins_requested <= bin_pennies:
+                refunded_pennies = coins_requested # Take needed nickels from bin
+            else:
+                refunded_pennies = bin_pennies # Take remaining nickels from bin
+            
+        amount = round(amount - (refunded_pennies * resources["USD_pennies_value"]), 2)      
+             
+        # Show user their refund in exact coins
+        print(f'- Number of quarters: {refunded_quarters}')
+        print(f'- Number of dimes:    {refunded_dimes}')
+        print(f'- Number of nickels:  {refunded_nickels}')
+        print(f'- Number of pennies:  {refunded_pennies}')           
+
+        if amount > 0:
+        
+            # Output message to user
+            print('\nERROR: Machine coin reserves depleted.\n')
+            print(f'Contact business to request your remaining refund of ${amount}.\n')
+            print('Our apologies for your inconvenience.\n')
+            
+            # Set error flag to help shutdown machine
+            cash_bin_error = True  
+        
+        return refunded_quarters, refunded_dimes, \
+               refunded_nickels, refunded_pennies, \
+               cash_bin_error
 
     def report_resources(self, coffee: float = 0.0, milk: float = 0.0, water: float = 0.0, \
                                quarters: int = 0, dimes: int=0, nickels: int = 0, pennies: int = 0):
@@ -330,6 +391,7 @@ class coffee_machine:
         # Initialize main() variables
         action:                int = 0
         refund_amount:         float = 0.0
+        cash_bin_error:        bool = False
         controlled_power_down: bool = False
         dispenser_message:     str = ''
         drink_ordered:         str = ''
@@ -437,12 +499,11 @@ class coffee_machine:
                                 dispenser_message += 'Thanks for using exact change.'
                             else:
                                 dispenser_message += f'Returning ${refund_amount:.2f}.'
-                                ### Refund change here
                         
                             # Update current machine resources
                             machine_coffee -= menu[drink_ordered]["ingredients"]["coffee"]
-                            machine_milk -= menu[drink_ordered]["ingredients"]["milk"]
-                            machine_water -= menu[drink_ordered]["ingredients"]["water"]
+                            machine_milk   -= menu[drink_ordered]["ingredients"]["milk"]
+                            machine_water  -= menu[drink_ordered]["ingredients"]["water"]
                         
                             # Clear total deposited
                             total_deposited = 0
@@ -454,12 +515,21 @@ class coffee_machine:
                         dispenser_message = 'Error: Selection unavailable until machine refilled'
                     
                 # Handle refund change request
-                # TODO: Continue handling refunds
                 case 4:
-                    # Refund deposited amounts by currency type
+                    # Refund total_deposited amount by currency type
                     refunded_quarters, refunded_dimes, \
-                        refunded_nickels, refunded_pennies = \
-                            self.refund_change(total_deposited, refund_amount)
+                    refunded_nickels, refunded_pennies, \
+                    cash_bin_error = \
+                        self.refund_change(total_deposited, bin_quarters, \
+                                                            bin_dimes, \
+                                                            bin_nickels, \
+                                                            bin_pennies)
+                    
+                    # Subtract refunded coins from cash bin
+                    bin_quarters -= refunded_quarters
+                    bin_dimes    -= refunded_dimes
+                    bin_nickels  -= refunded_nickels
+                    bin_pennies  -= refunded_pennies                    
                     
                     # Reset refunded coin amounts
                     refunded_quarters = 0
@@ -467,6 +537,11 @@ class coffee_machine:
                     refunded_nickels  = 0
                     refunded_pennies  = 0
                     
+                    # Reset total deposit and refund amount
+                    total_deposited = 0
+                    
+                    # If cash_bin_error is True then shutdown the machine without confirmation
+                    controlled_power_down = self.shutdown(total_deposited, )
                     
                     # Press any key to continue
                     press_any_key_to_continue()
